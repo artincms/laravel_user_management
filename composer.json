@@ -1,0 +1,32 @@
+{
+    "name": "artincms/laravel_user_management",
+    "description": "Official ArtinCMS.com Laravel User Manager Package",
+    "keywords": ["laravel", "ArtinCMS", "User System", "storage", "artincms.com","آرتین سی ام اس"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adel.Raheli",
+            "email": "adel.raheli@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ArtinCMS\\LUM\\": "src/"
+        },
+        "files": [
+            "src/Helpers/Functions/Lum.php"
+        ]
+
+    },
+    "require": {
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "artincms/laravel_tagable": "dev-master"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ArtinCMS\\LUM\\LUMServiceProvider"
+            ]
+        }
+    }
+}
