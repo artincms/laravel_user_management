@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'h_lgs';
+  src:  url('fonts/h_lgs.eot?x7oxsb');
+  src:  url('fonts/h_lgs.eot?x7oxsb#iefix') format('embedded-opentype'),
+    url('fonts/h_lgs.ttf?x7oxsb') format('truetype'),
+    url('fonts/h_lgs.woff?x7oxsb') format('woff'),
+    url('fonts/h_lgs.svg?x7oxsb#h_lgs') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.lgs-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'h_lgs' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-lgs-download:before {
+  content: "\f019";
+}
+.fa-lgs-folder-open:before {
+  content: "\f07c";
+}
+.fa-lgs-folder:before {
+  content: "\f07b";
+}
+.fa-lgs-level-down-alt:before {
+  content: "\f3be";
+}
+.fa-lgs-level-up-alt:before {
+  content: "\f3bf";
+}
+.fa-lgs-search-plus:before {
+  content: "\f00e";
+}
+.fa-lgs-folder-open1:before {
+  content: "\f07d";
+}
+.fa-lgs-folder1:before {
+  content: "\f07e";
+}

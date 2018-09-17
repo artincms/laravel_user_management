@@ -2,13 +2,28 @@
 
 namespace ArtinCMS\LUM\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserManagement extends Model
+class UserManagement extends Authenticatable
 {
-    protected $table = 'faq_manager';
-    public function user()
-    {
-        return $this->belongsTo(config('laravel_user_management.user_model'), 'created_by');
-    }
+    use Notifiable;
+    use SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $table = 'lum_users';
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 }

@@ -20,7 +20,8 @@
     },
     "require": {
         "yajra/laravel-datatables-oracle": "~8.0",
-        "artincms/laravel_tagable": "dev-master"
+        "santigarcor/laratrust": "5.0.*",
+        "hashids/hashids": "^3.0"
     },
     "extra": {
         "laravel": {
