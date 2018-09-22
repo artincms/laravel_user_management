@@ -270,4 +270,11 @@
         }
     });
 
+    $(document).off("click", ".close_message_btn");
+    $(document).on("click", ".close_message_btn", function () {
+        console.log('dd');
+       $('#form_message_box').html('');
+    });
+
+
 </script>
