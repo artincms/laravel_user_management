@@ -276,5 +276,137 @@
        $('#form_message_box').html('');
     });
 
+    //-----------------------------------set permissions---------------------------------------//
+    $(document).off("click", ".btn_set_permissions_to_role");
+    $(document).on("click", ".btn_set_permissions_to_role", function () {
+        var item_id = $(this).data('item_id');
+        var title = $(this).data('title');
+        var type = 2 ;
+        $('#set_permission_id').val(item_id);
+        $('#permission_type').val(type);
+        $('.title_permissino').html('انتصاب دسترسی به نقش: ' + title);
+        $('.set_permissions_tab_tab').removeClass('hidden');
+        $('a[href="#set_permissions"]').click();
+        set_permissions(item_id,type);
+    });
+
+    function set_permissions(item_id,type) {
+
+    }
+
+    $(document).off("click", '.show_permission_checkbox');
+    $(document).on('click', '.show_permission_checkbox', function (e) {
+        var item_id = $(this).data('item_id');
+        var font_class = '#font_check_'+item_id ;
+        var show_div_id = '#show_div_'+item_id ;
+        var status = $(show_div_id).attr('data-status');
+        console.log(status,item_id,show_div_id);
+        if(status == 0)
+        {
+            $(font_class).removeClass('fa-circle');
+            $(font_class).addClass('fa-check-circle');
+            $(show_div_id).attr('data-status',2);
+            set_all_child_box(item_id);
+        }
+        else if(status == 1)
+        {
+            $(font_class).removeClass('fa-circle');
+            $(font_class).removeClass('fa-dot-circle');
+            $(font_class).addClass('fa-check-circle');
+            $(show_div_id).attr('data-status',2);
+            set_all_child_box(item_id);
+        }
+        else if(status == 2)
+        {
+            $(font_class).removeClass('fa-check-circle');
+            $(font_class).addClass('fa-circle');
+            $(show_div_id).attr('data-status',0);
+            set_none_child_box(item_id);
+        }
+
+    });
+
+    function set_all_child_box(item_id) {
+        var check_class = '.pch_'+item_id ;
+        $(check_class).each(function () {
+            $(this).addClass('selected');
+            $(this).prop('checked', true);
+        }) ;
+        var font_class_i  = '.font_check_i_'+item_id ;
+        $(font_class_i).each(function () {
+            $(this).removeClass('fa-circle');
+            $(this).removeClass('fa-dot-circle');
+            $(this).addClass('fa-check-circle');
+            $(this).prop('checked', true);
+        }) ;
+
+        var font_show_div  = '.show_div_'+item_id ;
+        $(font_show_div).each(function () {
+            $(this).attr('data-status', 2);
+        }) ;
+    }
+
+    function set_none_child_box(item_id) {
+        var check_class = '.pch_'+item_id ;
+        $(check_class).each(function () {
+            $(this).removeClass('selected');
+            $(this).prop('checked', false);
+        }) ;
+
+        var font_class_i  = '.font_check_i_'+item_id ;
+        $(font_class_i).each(function () {
+            $(this).removeClass('fa-check-circle');
+            $(this).addClass('fa-circle');
+            $(this).prop('checked', true);
+        }) ;
+        var font_show_div  = '.show_div_'+item_id ;
+        $(font_show_div).each(function () {
+            $(this).attr('data-status', 0);
+        }) ;
+    }
+    function change_checked(input) {
+        var $this = $(input);
+        $this.toggleClass('selected');
+        var class_name = $this.attr('class');
+        class_name = class_name.replace(' selected','');
+        class_name = class_name.replace(' checkbox','');
+        class_name = class_name.split(" ")
+        var user_id = $this.data('item_id');
+        var checked = input.checked ;
+        $(class_name).each(function () {
+            var item = this.replace('pch','#font_check');
+            var div_item = this.replace('pch','#show_div');
+            $(item).each(function () {
+                $(this).removeClass('fa-check-circle');
+                $(this).removeClass('fa-circle');
+                $(this).addClass('fa-dot-circle');
+            });
+            $(div_item).each(function () {
+                $(this).attr('data-status',1);
+            });
+        }) ;
+        var selected
+        $('.checkbox').each(function () {
+            if($(this).hasClass('selected'))
+            {
+                selected = true ;
+            }
+            else
+            {
+                selected = true ;
+            }
+        });
+        console.log(selected);
+        if(!selected)
+        {
+            $('.show_permission_checkbox').each(function () {
+                $('.far').removeClass('fa-dot-circle')
+                $('.far').addClass('fa-check-circle')
+            });
+        }
+    }
+
+
+
 
 </script>

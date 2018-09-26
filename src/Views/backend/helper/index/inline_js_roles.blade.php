@@ -68,6 +68,9 @@
                     '   <i class="fas fa-bars"></i> ' +
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
+                    '   <a class="btn_set_permissions_to_role pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
+                    '       <i class="fa fa-edit"></i><span class="ml-2">افزودن دسترسی ها</span>' +
+                    '   </a>' +
                     '   <a class="btn_edit_roles pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
                     '       <i class="fa fa-edit"></i><span class="ml-2">ویرایش</span>' +
                     '   </a>' +
@@ -262,5 +265,7 @@
         }
     });
     }
+
+
 
 </script>

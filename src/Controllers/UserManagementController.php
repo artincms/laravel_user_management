@@ -3,6 +3,7 @@
 namespace ArtinCMS\LUM\Controllers;
 
 use ArtinCMS\LUM\Models\PermissionCategoryManagement;
+use ArtinCMS\LUM\Models\PermissionManagement;
 use ArtinCMS\LUM\Models\RoleManagement;
 use ArtinCMS\LUM\Models\UserManagement;
 use Yajra\DataTables\Facades\DataTables;
@@ -15,7 +16,11 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        return view('laravel_user_management::backend.index');
+//        dd(LUM_Create_checkbox_Class(PermissionCategoryManagement::find(8),'font_check_i',false)) ;
+//        $permission_items = PermissionCategoryManagement::with('childItems')->get();
+//        $permissions = LUM_BuildTree($permission_items->toArray(),'parent_id');
+        $permissions = generate_permissions_layout('ArtinCMS\LUM\Models\PermissionCategoryManagement');
+        return view('laravel_user_management::backend.index',compact('permissions'));
     }
 
     public function getUsers()

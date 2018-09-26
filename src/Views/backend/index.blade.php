@@ -11,23 +11,29 @@
             <div class="card-body">
                 <div class="tabbable">
                     <ul class="nav nav-tabs nav-tabs-bottom" id="user_tab" role="tablist">
-                        <li class="nav-item"><a class="nav-link active" href="#manage_tab" data-toggle="tab"><i class="fas fa-th-list"></i><span class="margin_right_5">مدیریت کاربران</span></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#manage_tab" data-toggle="tab"><i class="fas fa-users-cog"></i><span class="margin_right_5">مدیریت کاربران</span></a></li>
                         <li class="nav-item roles_manager_tab">
                             <a class="nav-link" href="#roles_manager" data-toggle="tab">
-                                <i class="far fa-plus-square"></i>
+                                <i class="fas fa-users-cog"></i>
                                 <span>مدیریت نقش ها</span>
                             </a>
                         </li>
                         <li class="nav-item permissin_category_manager_tab">
                             <a class="nav-link" href="#permissin_category_manager" data-toggle="tab">
-                                <i class="far fa-plus-square"></i>
+                                <i class="fas fa-users-cog"></i>
                                 <span>مدیریت دسترسی ها</span>
                             </a>
                         </li>
-                        <li class="nav-item login_history_tab">
+                        <li class="nav-item set_permissions_tab_tab">
+                            <a class="nav-link" href="#set_permissions" data-toggle="tab">
+                                <i class="fas fa-cog"></i>
+                                <span class="set_permissions_span">انتصاب دسترسی</span>
+                            </a>
+                        </li>
+                        <li class="nav-item login_history_tab"  style="position: absolute;left: 0px;">
                             <a class="nav-link" href="#login_history" data-toggle="tab">
-                                <i class="far fa-plus-square"></i>
                                 <span>تاریخچه ورود</span>
+                                <i class="fas fa-history"></i>
                             </a>
                         </li>
                     </ul>
@@ -293,6 +299,21 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="tab-pane" id="set_permissions">
+                            <div class="space-20"></div>
+                            <div class="title_permissino col-md-6 float-left" style="font-size: 18px;font-weight: bold;">
+                                انتصاب دسترسی به
+                            </div>
+                            <form id="frm_set_permission" class="form-horizontal" name="frm_set_permission">
+                                <input type="hidden" name="set_permission_id" id="set_permission_id" value="">
+                                <input type="hidden" name="permission_type" id="permission_type" value="">
+                                <div class="show_permissions">
+                                    <ul id="ul_show_permissions">
+                                        {!! $permissions !!}
+                                    </ul>
+                                </div>
+                            </form>
                         </div>
                         <div class="tab-pane" id="login_history"></div>
                     </div>

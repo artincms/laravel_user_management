@@ -15,9 +15,13 @@ class PermissionCategoryManagement extends Model
         return $this->hasOne('ArtinCMS\LUM\Models\PermissionCategoryManagement', 'id', 'parent_id');
     }
 
-    public function childrens()
+    public function Children()
     {
         return $this->hasMany('ArtinCMS\LUM\Models\PermissionCategoryManagement', 'parent_id', 'id');
     }
 
+    public function childItems()
+    {
+        return $this->hasMany('ArtinCMS\LUM\Models\PermissionManagement', 'category_id', 'id');
+    }
 }
