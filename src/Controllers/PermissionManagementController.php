@@ -4,6 +4,9 @@ namespace ArtinCMS\LUM\Controllers;
 
 use ArtinCMS\LUM\Models\PermissionCategoryManagement;
 use ArtinCMS\LUM\Models\PermissionManagement;
+use ArtinCMS\LUM\Models\PermissionRoleManagement;
+use ArtinCMS\LUM\Models\RoleManagement;
+use ArtinCMS\LUM\Models\UserManagement;
 use Yajra\DataTables\Facades\DataTables;
 use Validator;
 use Illuminate\Http\Request;
@@ -414,6 +417,100 @@ class PermissionManagementController extends Controller
             return json_encode($res);
         }
 
+    }
+
+    public function addRoleToPermission(Request $request)
+    {
+        DB::beginTransaction();
+        try
+        {
+            $item_id = $request->item_id ;
+            $type = $request->type ;
+            $item_id = LUM_GetDecodeId($request->item_id) ;
+            $type = $request->type ;
+            if($type == 2)
+            {
+                $role = RoleManagement::find($item_id);
+                $role->permissions()->sync($request->items);
+                $res =
+                    [
+                        'success' => true,
+                        'title'   => "ثبت دسترسی",
+                        'message' => 'دسترسی با موفقیت ثبت شد.'
+                    ];
+            }
+            else if($type = 1)
+            {
+                $user = UserManagement::find($item_id);
+                $user->permissions()->sync($request->items);
+                $res =
+                    [
+                        'success' => true,
+                        'title'   => "ثبت دسترسی",
+                        'message' => 'دسترسی با موفقیت ثبت شد.'
+                    ];
+            }
+
+            DB::commit();
+
+            return $res;
+        } catch (\Exception $e)
+        {
+            DB::rollback();
+            $res =
+                [
+                    'success' => false,
+                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                ];
+
+            return json_encode($res);
+        }
+    }
+
+    public function getRolePermissionForm(Request $request)
+    {
+        $type = $request->type ;
+        $item_id = $request->item_id ;
+        if($type == 1)
+        {
+            $user = UserManagement::find(LUM_GetDecodeId($item_id));
+            if(isset( $user->permissions))
+            {
+                $user_permissions = $user->permissions ;
+                $permission_ids = [] ;
+                foreach ($user_permissions as $user_perm)
+                {
+                    $permission_ids[] = $user_perm->id ;
+                }
+            }
+            else
+            {
+                $permission_ids = [] ;
+            }
+        }
+        else
+        {
+            $role = RoleManagement::find(LUM_GetDecodeId($item_id));
+            if(isset( $role->permissions))
+            {
+                $role_permissions = $role->permissions ;
+                $permission_ids = [] ;
+                foreach ($role_permissions as $role_perm)
+                {
+                    $permission_ids[] = $role_perm->id ;
+                }
+            }
+            else
+            {
+                $permission_ids = [] ;
+            }
+        }
+        $permissions = generate_permissions_layout('ArtinCMS\LUM\Models\PermissionCategoryManagement',0,$permission_ids);
+        $item_form = view('laravel_user_management::backend.view.permission_role', compact('permissions','type','item_id'))->render();
+        $res['success'] = true;
+        $res['get_permission_role'] = $item_form;
+
+        return $res;
     }
 
 

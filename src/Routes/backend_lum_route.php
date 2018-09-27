@@ -34,5 +34,7 @@ Route::group(['prefix' => config('laravel_user_management.backend_lum_route_pref
         Route::post('getEditPermissionsForm', ['as' => 'LUM.Permissions.getEditPermissionsForm', 'uses' => 'PermissionManagementController@getEditPermissionsForm']);
         Route::post('editPermissions', ['as' => 'LUM.Permissions.editPermissions', 'uses' => 'PermissionManagementController@editPermissions']);
         Route::post('trashPermissions', ['as' => 'LUM.Permissions.trashPermissions', 'uses' => 'PermissionManagementController@trashPermissions']);
+        Route::post('addRoleToPermission', ['as' => 'LUM.Permissions.addRoleToPermission', 'uses' => 'PermissionManagementController@addRoleToPermission']);
+        Route::post('getRolePermissionForm', ['as' => 'LUM.Permissions.getRolePermissionForm', 'uses' => 'PermissionManagementController@getRolePermissionForm']);
     });
 });

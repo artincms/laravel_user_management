@@ -155,7 +155,7 @@
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
                     '   <a class="btn_add_permission pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + '">' +
-                    '       <i class="far fa-plus-square"></i><span class="ml-2">افزودن دسترسی</span>' +
+                    '       <i class="fas fa-reply"></i><span class="ml-2">افزودن دسترسی</span>' +
                     '   </a>' +
                     '   <a class="btn_edit_permission_categorys pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + '">' +
                     '       <i class="fa fa-edit"></i><span class="ml-2">ویرایش</span>' +
@@ -459,7 +459,6 @@
         },
         success: function (result) {
             $('#edit_permission_category .total_loader').remove();
-            console.log(result);
             if (result.success) {
                 $('#edit_permission_category').append(result.get_edit_item);
                 $('.edit_permission_category_tab').removeClass('hidden');

@@ -24,10 +24,16 @@
                                 <span>مدیریت دسترسی ها</span>
                             </a>
                         </li>
-                        <li class="nav-item set_permissions_tab_tab">
+                        <li class="nav-item set_permissions_tab_tab hidden">
                             <a class="nav-link" href="#set_permissions" data-toggle="tab">
                                 <i class="fas fa-cog"></i>
                                 <span class="set_permissions_span">انتصاب دسترسی</span>
+                            </a>
+                        </li>
+                        <li class="nav-item set_user_role_tab_tab">
+                            <a class="nav-link" href="#set_user_roles" data-toggle="tab">
+                                <i class="fas fa-cog"></i>
+                                <span class="set_user_role_span">انتصاب نقش به یوزر</span>
                             </a>
                         </li>
                         <li class="nav-item login_history_tab"  style="position: absolute;left: 0px;">
@@ -305,15 +311,14 @@
                             <div class="title_permissino col-md-6 float-left" style="font-size: 18px;font-weight: bold;">
                                 انتصاب دسترسی به
                             </div>
-                            <form id="frm_set_permission" class="form-horizontal" name="frm_set_permission">
-                                <input type="hidden" name="set_permission_id" id="set_permission_id" value="">
-                                <input type="hidden" name="permission_type" id="permission_type" value="">
-                                <div class="show_permissions">
-                                    <ul id="ul_show_permissions">
-                                        {!! $permissions !!}
-                                    </ul>
-                                </div>
-                            </form>
+                            <div id="show_form_permission_to_role"></div>
+                        </div>
+                        <div class="tab-pane" id="set_user_to_roles">
+                            <div class="space-20"></div>
+                            <div class="title_user_to_roles col-md-6 float-left" style="font-size: 18px;font-weight: bold;">
+                                انتصاب دسترسی به
+                            </div>
+                            <div id="show_form_permission_to_role"></div>
                         </div>
                         <div class="tab-pane" id="login_history"></div>
                     </div>

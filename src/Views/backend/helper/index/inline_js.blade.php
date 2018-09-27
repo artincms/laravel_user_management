@@ -102,8 +102,8 @@
                     '   <i class="fas fa-bars"></i> ' +
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
-                    '   <a class="show_gallery_item pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + '">' +
-                    '       <i class="fa fa-eye"></i><span class="ml-2">مشاهده آیتم ها</span>' +
+                    '   <a class="btn_set_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
+                    '       <i class="fa fa-reply"></i><span class="ml-2">افزودن دسترسی ها</span>' +
                     '   </a>' +
                     '   <a class="btn_edit_gallery pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + '">' +
                     '       <i class="fa fa-edit"></i><span class="ml-2">ویرایش</span>' +
@@ -281,17 +281,48 @@
     $(document).on("click", ".btn_set_permissions_to_role", function () {
         var item_id = $(this).data('item_id');
         var title = $(this).data('title');
+        $('.title_permissino').html('انتصاب دسترسی به نقش: ' + title);
         var type = 2 ;
         $('#set_permission_id').val(item_id);
         $('#permission_type').val(type);
-        $('.title_permissino').html('انتصاب دسترسی به نقش: ' + title);
-        $('.set_permissions_tab_tab').removeClass('hidden');
-        $('a[href="#set_permissions"]').click();
+
         set_permissions(item_id,type);
     });
 
+    $(document).off("click", ".btn_set_role_to_user");
+    $(document).on("click", ".btn_set_role_to_user", function () {
+        var item_id = $(this).data('item_id');
+        var title = $(this).data('title');
+        $('.title_permissino').html('انتصاب دسترسی به کاربر: ' + title);
+        var type = 1 ;
+        set_permissions(item_id,type);
+    });
     function set_permissions(item_id,type) {
+        $('#show_form_permission_to_role').children().remove();
+        $('#set_permissions').append(generate_loader_html('لطفا منتظر بمانید...'));
+        $.ajax({
+            type: "POST",
+            url: '{{ route('LUM.Permissions.getRolePermissionForm')}}',
+            dataType: "json",
+            data: {
+                item_id: item_id,
+                type: type,
+            },
+            success: function (result) {
+                $('#set_permissions .total_loader').remove();
+                if(result.success)
+                {
+                    $('#show_form_permission_to_role').append(result.get_permission_role);
+                    $('.set_permissions_tab_tab').removeClass('hidden');
+                    $('a[href="#set_permissions"]').click();
+                }
+                else
+                {
 
+                }
+
+            }
+        })
     }
 
     $(document).off("click", '.show_permission_checkbox');
@@ -389,22 +420,23 @@
         $('.checkbox').each(function () {
             if($(this).hasClass('selected'))
             {
-                selected = true ;
+                return selected = true ;
             }
             else
             {
-                selected = true ;
+                return selected = false ;
             }
         });
         console.log(selected);
         if(!selected)
         {
-            $('.show_permission_checkbox').each(function () {
-                $('.far').removeClass('fa-dot-circle')
-                $('.far').addClass('fa-check-circle')
-            });
+        //     $('.show_permission_checkbox').each(function () {
+        //         $('.far').removeClass('fa-dot-circle')
+        //         $('.far').addClass('fa-check-circle')
+        //     });
         }
     }
+
 
 
 

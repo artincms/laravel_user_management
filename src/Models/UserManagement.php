@@ -26,4 +26,14 @@ class UserManagement extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function permissions()
+    {
+        return $this->morphToMany('ArtinCMS\LUM\Models\PermissionManagement' , 'user','lum_permission_user','user_id','permission_id');
+    }
+
+    public function roles()
+    {
+        return $this->morphToMany('ArtinCMS\LUM\Models\RoleManagement' , 'user','lum_role_user','user_id','role_id');
+    }
 }
