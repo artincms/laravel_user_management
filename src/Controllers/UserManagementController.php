@@ -16,9 +16,6 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-//        dd(LUM_Create_checkbox_Class(PermissionCategoryManagement::find(8),'font_check_i',false)) ;
-//        $permission_items = PermissionCategoryManagement::with('childItems')->get();
-//        $permissions = LUM_BuildTree($permission_items->toArray(),'parent_id');
         return view('laravel_user_management::backend.index');
     }
 
@@ -231,6 +228,83 @@ class UserManagementController extends Controller
         }
 
     }
+
+    public function getUserRoleForm (Request $request)
+    {
+        $item_id = $request->item_id ;
+        $user = UserManagement::find(LUM_GetDecodeId($item_id));
+        if(isset( $user->roles))
+        {
+            $user_roles = $user->roles ;
+            $permission_ids = [] ;
+            foreach ($user_roles as $user_perm)
+            {
+                $permission_ids[] = $user_perm->id ;
+            }
+        }
+        else
+        {
+            $permission_ids = [] ;
+        }
+        $roles = RoleManagement::all() ;
+        if(count($roles) == count($permission_ids) )
+        {
+            $class = 'fa-check-circle';
+            $status = 2 ;
+        }
+        elseif(count($permission_ids) > 0)
+        {
+            $class = 'fa-dot-circle';
+            $status = 1 ;
+        }
+        else
+        {
+            $class = 'fa-circle';
+            $status = 0 ;
+
+        }
+        $item_form = view('laravel_user_management::backend.view.user_role', compact('roles','item_id','permission_ids','user','class','status'))->render();
+        $res['success'] = true;
+        $res['get_user_role'] = $item_form;
+
+        return $res;
+    }
+
+    public function addRoleToUsers(Request $request)
+    {
+        DB::beginTransaction();
+        try
+        {
+            $item_id = $request->item_id ;
+            $type = $request->type ;
+            $item_id = LUM_GetDecodeId($request->item_id) ;
+
+            $user = UserManagement::find($item_id);
+            $user->roles()->sync($request->items);
+            $res =
+                [
+                    'success' => true,
+                    'title'   => "ثبت دسترسی",
+                    'message' => 'دسترسی با موفقیت ثبت شد.'
+                ];
+
+            DB::commit();
+
+            return $res;
+        } catch (\Exception $e)
+        {
+            DB::rollback();
+            $res =
+                [
+                    'success' => false,
+                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                ];
+
+            return json_encode($res);
+        }
+    }
+
+
 
 
 }

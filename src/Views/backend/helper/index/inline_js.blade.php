@@ -102,7 +102,10 @@
                     '   <i class="fas fa-bars"></i> ' +
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
-                    '   <a class="btn_set_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
+                    '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
+                    '       <i class="fa fa-reply"></i><span class="ml-2">افزودن نقش ها</span>' +
+                    '   </a>' +
+                    '   <a class="btn_permission_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
                     '       <i class="fa fa-reply"></i><span class="ml-2">افزودن دسترسی ها</span>' +
                     '   </a>' +
                     '   <a class="btn_edit_gallery pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + '">' +
@@ -289,8 +292,8 @@
         set_permissions(item_id,type);
     });
 
-    $(document).off("click", ".btn_set_role_to_user");
-    $(document).on("click", ".btn_set_role_to_user", function () {
+    $(document).off("click", ".btn_permission_to_user");
+    $(document).on("click", ".btn_permission_to_user", function () {
         var item_id = $(this).data('item_id');
         var title = $(this).data('title');
         $('.title_permissino').html('انتصاب دسترسی به کاربر: ' + title);
@@ -435,6 +438,42 @@
         //         $('.far').addClass('fa-check-circle')
         //     });
         }
+    }
+
+    $(document).off("click", ".btn_role_to_user");
+    $(document).on("click", ".btn_role_to_user", function () {
+        var item_id = $(this).data('item_id');
+        var title = $(this).data('title');
+        set_roles_to_user(item_id);
+    });
+
+    function set_roles_to_user(item_id,type) {
+        $('#show_form_roles_to_user').children().remove();
+        $('#set_user_to_roles').append(generate_loader_html('لطفا منتظر بمانید...'));
+        $.ajax({
+            type: "POST",
+            url: '{{ route('LUM.Users.getUserRoleForm')}}',
+            dataType: "json",
+            data: {
+                item_id: item_id,
+                type: type,
+            },
+            success: function (result) {
+                $('#set_user_to_roles .total_loader').remove();
+                if(result.success)
+                {
+                    $('#show_form_roles_to_user').append(result.get_user_role);
+                    $('.set_user_to_role_tab').removeClass('hidden');
+                    $('a[href="#set_user_to_roles"]').click();
+                }
+                else
+                {
+                    showMessages(data.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, data.errors);
+                }
+
+            }
+        })
     }
 
 
