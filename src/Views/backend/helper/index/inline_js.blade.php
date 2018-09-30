@@ -27,8 +27,8 @@
         },
         {
             width: '10%',
-            data: 'name',
-            name: 'name',
+            data: 'first_name',
+            name: 'first_name',
             title: 'نام',
         },
         {
@@ -56,7 +56,7 @@
             title: 'وضعیت',
             mRender: function (data, type, full) {
                 var ch = '';
-                if (parseInt(full.is_active))
+                if (parseInt(full.user_confirmed))
                     ch = 'checked';
                 else
                     ch = '';
@@ -64,7 +64,7 @@
             }
         },
         {
-            width: '5%',
+            width: '10%',
             data: 'email_confirmed',
             name: 'email_confirmed',
             title: 'تایید ایمیل',
@@ -78,11 +78,25 @@
             }
         },
         {
-            width: '5%',
-            data: 'main_id',
-            name: 'id',
-            title: 'آی دی',
+            width: '10%',
+            data: 'email_confirmed',
+            name: 'email_confirmed',
+            title: 'تایید موبایل',
+            mRender: function (data, type, full) {
+                var ch = '';
+                if (parseInt(full.mobile_confirmed))
+                    ch = 'checked';
+                else
+                    ch = '';
+                return '<input id="change_mobile_status_'+full.id+'" class="styled" type="checkbox" name="special" data-item_id="' + full.id + '"  onchange="change_status_mobile(this)"' + ch + '>'
+            }
         },
+        // {
+        //     width: '5%',
+        //     data: 'main_id',
+        //     name: 'id',
+        //     title: 'آی دی',
+        // },
         {
             width: '10%',
             data: 'created_at',
@@ -102,16 +116,16 @@
                     '   <i class="fas fa-bars"></i> ' +
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
-                    '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
+                    '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
                     '       <i class="fa fa-reply"></i><span class="ml-2">افزودن نقش ها</span>' +
                     '   </a>' +
-                    '   <a class="btn_permission_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.name + '">' +
+                    '   <a class="btn_permission_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
                     '       <i class="fa fa-reply"></i><span class="ml-2">افزودن دسترسی ها</span>' +
                     '   </a>' +
-                    '   <a class="btn_edit_gallery pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + '">' +
+                    '   <a class="btn_edit_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
                     '       <i class="fa fa-edit"></i><span class="ml-2">ویرایش</span>' +
                     '   </a>' +
-                    '    <a class="btn_trash_gallery pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.title + ' ">' +
+                    '    <a class="btn_trash_gallery pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + ' ">' +
                     '       <i class="fa fa-trash"></i><span class="ml-2">حذف</span>' +
                     '   </a>'
                 '  </div>' +
@@ -127,31 +141,6 @@
             rightColumns: 1
         };
         dataTablesGrid('#UsersGridData', 'UsersGridData', getUsersRoute, users_grid_columns, null, null, true, null, null, 1, 'desc',false,fixedColumn);
-
-        //-------------------------------------------------------submit filter data ------------------------------------------------
-        $(document).off("click", ".btn_edit_user");
-        $(document).on("click", ".btn_edit_user", function () {
-            var $this = $(this);
-            var user_id = $this.data('id');
-            get_user_data(user_id);
-        });
-
-        function get_user_data(user_id) {
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: '{!!  route('LUM.Users.getEditUserForm') !!}',
-                data: {user_id: user_id},
-            success: function (result) {
-                if (result.success) {
-                    $('#edit_tab').html(result.html);
-                    $('#tab_pill_edit').show();
-                    $('#tab_pill_edit a').click();
-                    $('#tab_link_edit').html('ویرایش اطلاعات ' + result.data.first_name + ' ' + result.data.last_name + ' (' + result.data.username + ')');
-                }
-            }
-        });
-        }
     })
 
     function change_status_user(input) {
@@ -476,8 +465,145 @@
         })
     }
 
+    $(document).off("click", ".cancel_add_users_btn");
+    $(document).on("click", ".cancel_add_users_btn", function () {
+        $('a[href="#manage_user"]').click();
+    });
 
+    //-----------------add user -------------------------------------------------------------//
+    var frm__add_users = document.querySelector("#frm_create_users");
+    var create_users_constraints = {
+        username: {
+            presence: {message: '^<strong>نام کاربری ضروری است.</strong>'},
+            length: {minimum: 5, message: '^<strong>نام کاربری نمی‌تواند کمتر از 5 کاراکتر باشد.</strong>'},
+            length: {maximum: 20, message: '^<strong>نام کاربری نمی‌تواند بیشتر از 20 کاراکتر باشد.</strong>'}
+    },
+        first_name: {
+            presence: {message: '^<strong>نام ضروری است.</strong>'},
+            length: {minimum: 2, message: '^<strong>نام  نمی‌تواند کمتر از 2 کاراکتر باشد.</strong>'},
+            length: {maximum: 60, message: '^<strong>نام نمی‌تواند بیشتر از 60 کاراکتر باشد.</strong>'}
+        },
+        last_name: {
+            presence: {message: '^<strong>نام خانوادگی ضروری است.</strong>'},
+            length: {minimum: 2, message: '^<strong>نام خانوادگی  نمی‌تواند کمتر از 2 کاراکتر باشد.</strong>'},
+            length: {maximum: 60, message: '^<strong>نام خانوادگی نمی‌تواند بیشتر از 60 کاراکتر باشد.</strong>'}
+        },
+        email: {
+            presence: {message: '^<strong>وارد کردن ایمیل الزامی است.</strong>'},
+            email: {message: '^<strong>ایمیل وارد شده معتبر نمی باشد.</strong>'}
+        },
+        mobile: {
+            iranMobileNumber: {message: '^<strong>شماره همراه وارد شده صحیح نمی باشد.</strong>'},
+            length: {maximum: 11, message: '^<strong>شماره همراه نمی‌تواند بیشتر از 11 کاراکتر باشد.</strong>'}
+        },
+        password: {
+            presence: {message: '^<strong>وارد کردن رمزعبور الزامی است.</strong>'},
+            length: {minimum: 6, message: '^<strong>کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.</strong>'}
 
+        },
+        password_confirmation: {
+            presence: {message: '^<strong>وارد کردن تکرار کلمه عبور الزامی است.</strong>'},
+            length: {minimum: 6, message: '^<strong>تکرار کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.</strong>'},
+            equality: {
+                attribute: "password",
+                message: '^<strong>تکرار رمز عبور با رمز عبور وارد شده یکسان نیست.</strong>',
+                comparator: function (v1, v2) {
+                    return JSON.stringify(v1) === JSON.stringify(v2);
+                }
+            }
+        },
+    };
+    init_validatejs(frm__add_users, create_users_constraints, ajax_func_add_users);
+    function ajax_func_add_users(formElement) {
+        var formData = new FormData(formElement);
+        $.ajax({
+            type: "POST",
+            url: '{{ route('LUM.Users.addUsers')}}',
+            dataType: "json",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $('#frm_create_users .total_loader').remove();
+                if (data.success) {
+                    clear_form_elements('#frm_create_users');
+                    menotify('success', data.title, data.message);
+                    UsersGridData.ajax.reload(null, false);
+                    $('a[href="#manage_user"]').click();
 
+                }
+                else {
+                    showMessages(data.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, data.errors);
+                }
+            }
+        });
+    }
+    //----------------------------------------------------edit user-----------------------------------------------------//
+    $(document).off("click", ".btn_edit_user");
+    $(document).on("click", ".btn_edit_user ", function () {
+        var item_id = $(this).data('item_id');
+        var title = $(this).data('title');
+        $('.span_edit_user_tab').html('ویرایش آیتم: ' + title);
+        get_edit_user_form(item_id);
+    });
 
+    function get_edit_user_form(item_id) {
+        $('#edit_user').children().remove();
+        $('#edit_user').append(generate_loader_html('لطفا منتظر بمانید...'));
+        $.ajax({
+            type: "POST",
+            url: '{{ route('LUM.Users.getEditUserForm')}}',
+            dataType: "json",
+            data: {
+                item_id: item_id
+            },
+            success: function (result) {
+                $('#edit_user .total_loader').remove();
+                console.log(result);
+                if (result.success) {
+                    $('#edit_user').append(result.get_edit_item);
+                    $('.edit_user_tab').removeClass('hidden');
+                    $('a[href="#edit_user"]').click();
+
+                    var edit_permission_form_id = document.querySelector("#frm_edit_users");
+                    init_validatejs(edit_permission_form_id, create_users_constraints, ajax_func_edit_users);
+                    function ajax_func_edit_users(formElement) {
+                        var formData = new FormData(formElement);
+                        $.ajax({
+                            type: "POST",
+                            url: '{{ route('LUM.Users.editUser')}}',
+                            dataType: "json",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (data) {
+                                $('#frm_edit_users .total_loader').remove();
+                                if (data.success) {
+                                    clear_form_elements('#frm_create_permissions');
+                                    menotify('success', data.title, data.message);
+                                    $('.edit_user_tab').addClass('hidden');
+                                    UsersGridData.ajax.reload(null, false);
+                                    $('a[href="#manage_user"]').click();
+                                }
+                                else {
+                                    showMessages(data.message, 'form_message_box', 'error', formElement);
+                                    showErrors(formElement, data.errors);
+                                }
+                            }
+                        });
+                    }
+                    $(document).off("click", ".cancel_edit_user_btn");
+                    $(document).on("click", ".cancel_edit_user_btn", function () {
+                        $('a[href="#manage_user"]').click();
+                        $('.edit_user_tab').addClass('hidden');
+                        $('#edit_user').html('');
+                    });
+                }
+                else {
+
+                }
+            }
+        });
+    }
 </script>

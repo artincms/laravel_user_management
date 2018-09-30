@@ -9,6 +9,9 @@ Route::group(['prefix' => config('laravel_user_management.backend_lum_route_pref
         Route::post('trashUser', ['as' => 'LUM.Users.trashUser', 'uses' => 'UserManagementController@trashUser']);
         Route::post('getUserRoleForm', ['as' => 'LUM.Users.getUserRoleForm', 'uses' => 'UserManagementController@getUserRoleForm']);
         Route::post('addRoleToUsers', ['as' => 'LUM.Users.addRoleToUsers', 'uses' => 'UserManagementController@addRoleToUsers']);
+        Route::post('getLogs', ['as' => 'LUM.Users.getLogs', 'uses' => 'UserManagementController@getLogs']);
+        Route::post('addUsers', ['as' => 'LUM.Users.addUsers', 'uses' => 'UserManagementController@addUsers']);
+        Route::post('editUser', ['as' => 'LUM.Users.editUser', 'uses' => 'UserManagementController@editUser']);
     });
 
     Route::group(['prefix' => 'Roles'], function () {

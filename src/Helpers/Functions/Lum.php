@@ -314,4 +314,74 @@ if (!function_exists('LUM_Create_checkbox_Class'))
         return $res ;
     }
 }
+
+if (!function_exists('LUM_CreateLogLogin'))
+{
+    function LUM_CreateLogLogin($request,$user_id)
+    {
+        if($request && $user_id)
+        {
+            $user = \ArtinCMS\LUM\Models\UserManagement::find($user_id);
+            $roles = $user->roles->toArray() ;
+            $permissions = $user->permissions->toArray() ;
+            $access = array_merge($roles,$permissions);
+            $log = new \ArtinCMS\LUM\Models\LogManagement();
+            $log->ip = $request->ip ;
+            $log->user_id = $user_id ;
+            $log->access_json = json_encode($access) ;
+            $log->save() ;
+        }
+    }
+}
+
+if (!function_exists('LUM_generateSMSRandomKey'))
+{
+    function LUM_generateSMSRandomKey($digits)
+    {
+        $min = pow(10, $digits - 1);
+        $max = pow(10, $digits) - 1;
+
+        return mt_rand($min, $max);
+    }
+}
+if (!function_exists('LUM_generateEmailRandomKey'))
+{
+    function LUM_generateEmailRandomKey()
+    {
+        $random_key = md5(rand(1000, 50000));
+
+        return $random_key;
+    }
+}
+if (!function_exists('array_field_name'))
+{
+    function array_field_name($key)
+    {
+        $key_name_parts = explode('.', $key);
+        $res = $key_name_parts[0];
+        foreach ($key_name_parts as $k => $part)
+        {
+            if ($k > 0)
+            {
+                $res .= '[' . $part . ']';
+            }
+        }
+
+        return $res;
+    }
+}
+if (!function_exists('validation_error_to_api_json'))
+{
+    function validation_error_to_api_json($errors)
+    {
+        $api_errors = [];
+        foreach ($errors->getMessages() as $key => $value)
+        {
+            $key = array_field_name($key);
+            $api_errors[ $key ] = array_values($value);
+        }
+
+        return $api_errors;
+    }
+}
 ?>
