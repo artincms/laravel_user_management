@@ -14,7 +14,7 @@ class LUM_UserManagementController extends Controller
 
     public function __construct(array $settings = [])
     {
-        $this->user_model =config('laratrust.user_models.users');
+        $this->user_model =config('laravel_user_management.user_model');
     }
     public function index()
     {

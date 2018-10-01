@@ -11,6 +11,6 @@ return [
 
     //-----------------FOR EXTERNAL USER CONTROLLER
     'have_external_controller'            => env('HAVE_EXTERNAL_CONTROLLER', true),
-    'user_controller_name'                => env('USER_CONTROLLER_NAME', 'UserManagement'),
+    'user_controller_name'                => env('USER_CONTROLLER_NAME', 'LUM_UserManagementController'),
     'external_user_controller_name_space' => env('EXTERNAL_USER_CONTROLLER_NAME_SPACE', 'App\Http\Controllers\Vendor\LUM'),
 ];
