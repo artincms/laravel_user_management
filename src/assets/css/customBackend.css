@@ -606,4 +606,52 @@ div#SysProcessGridData_filter {
 .gallerty_menu {
     position: relative;
 }
+.close_message_btn {
+	position: absolute;
+    top: 15px;
+    left: 15px;
+}
+#form_message_box h6 {
+    color: red;
+}
+#ul_show_permissions li {
+    list-style: none;
+}
+ul#ul_show_permissions span {
+    margin-right: 4px;
+}
+.title_per {
+    font-size: 16px;
+    font-weight: 500;
+}
+.padding_10 {
+    padding: 0px 0px 10px 0px;
+}
+.margin_3{
+    margin: 3px;
+}
+.show_permission_checkbox {
+     float: right;
+     margin-left: 6px;
+ }
+.permission_header{
+    max-height: 44px;
+}
+.ul_show_role_user{
+    -moz-column-count: 5;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 5;
+    -webkit-column-gap: 20px;
+    column-count: 5;
+    column-gap: 20px;
+}
 
+ul.ul_show_role_user li {
+    list-style: none;
+}
+.span_show_label_user_to_role {
+    margin-right: 7px;
+}
+#UsersGridData_wrapper table th {
+    font-size: 14px;
+}

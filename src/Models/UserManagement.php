@@ -5,11 +5,13 @@ namespace ArtinCMS\LUM\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class UserManagement extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
+    use LaratrustUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -26,14 +28,4 @@ class UserManagement extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    public function permissions()
-    {
-        return $this->morphToMany('ArtinCMS\LUM\Models\PermissionManagement' , 'user','lum_permission_user','user_id','permission_id');
-    }
-
-    public function roles()
-    {
-        return $this->morphToMany('ArtinCMS\LUM\Models\RoleManagement' , 'user','lum_role_user','user_id','role_id');
-    }
 }

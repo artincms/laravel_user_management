@@ -46,7 +46,7 @@
 
         $.ajax({
                 type: "POST",
-                url: '{{ route('LUM.Users.addRoleToUsers')}}',
+                url: '{{ route('LUM.Roles.addRoleToUsers')}}',
                 dataType: "json",
                 data: {
                     item_id: user_id,

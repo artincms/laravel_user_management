@@ -24,6 +24,12 @@
                                 <span>مدیریت دسترسی ها</span>
                             </a>
                         </li>
+                        {{--<li class="nav-item teams_manager_tab">--}}
+                            {{--<a class="nav-link" href="#teams_manager" data-toggle="tab">--}}
+                                {{--<i class="fas fa-users-cog"></i>--}}
+                                {{--<span>مدیریت تیم ها</span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                         <li class="nav-item set_permissions_tab_tab hidden">
                             <a class="nav-link" href="#set_permissions" data-toggle="tab">
                                 <i class="fas fa-cog"></i>
@@ -36,6 +42,12 @@
                                 <span class="set_user_role_span">انتصاب نقش به یوزر</span>
                             </a>
                         </li>
+                        {{--<li class="nav-item set_user_to_team_tab hidden">--}}
+                            {{--<a class="nav-link" href="#set_user_to_teams" data-toggle="tab">--}}
+                                {{--<i class="fas fa-cog"></i>--}}
+                                {{--<span class="set_user_team_span">انتصاب تیم به یوزر</span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                         <li class="nav-item login_history_tab"  style="position: absolute;left: 0px;">
                             <a class="nav-link" href="#login_history" data-toggle="tab">
                                 <span>تاریخچه ورود</span>
@@ -72,7 +84,7 @@
                                         <div>
                                             <div class="space-20"></div>
                                             <div class="col-xs-12 user_manager_parrent_div">
-                                                <table id="UsersGridData" class="table " width="100%"></table>
+                                                <table id="UsersGridData" class="table" width="100%"></table>
                                             </div>
                                         </div>
                                     </div>
@@ -303,6 +315,78 @@
                                 </div>
                             </div>
                         </div>
+                        {{--<div class="tab-pane" id="teams_manager">--}}
+                            {{--<div class="space-20"></div>--}}
+                            {{--<div class="tabbable">--}}
+                                {{--<ul class="nav nav-tabs nav-tabs-bottom" id="team_tab">--}}
+                                    {{--<li class="nav-item">--}}
+                                        {{--<a class="nav-link active" href="#manage_tab_team" data-toggle="tab">--}}
+                                            {{--<i class="fas fa-th-list"></i>--}}
+                                            {{--<span class="margin_right_5">مدیریت</span>--}}
+                                        {{--</a>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="nav-item" id="add_team_tab">--}}
+                                        {{--<a class="nav-link" href="#add_team" data-toggle="tab">--}}
+                                            {{--<i class="far fa-plus-square"></i>--}}
+                                            {{--<span>افزودن تیم</span>--}}
+                                        {{--</a>--}}
+                                    {{--</li>--}}
+                                    {{--<li class="nav-item edit_team_tab hidden">--}}
+                                        {{--<a href="#edit_team" class="nav-link paddin_left_30" data-toggle="tab">--}}
+                                            {{--<span class="span_edit_team_tab">ویرایش</span>--}}
+                                        {{--</a>--}}
+                                        {{--<button class="close closeTab cancel_edit_teams_btn" type="button">×</button>--}}
+                                    {{--</li>--}}
+                                {{--</ul>--}}
+                                {{--<div class="tab-content">--}}
+                                    {{--<div class="tab-pane active" id="manage_tab_team">--}}
+                                        {{--<div>--}}
+                                            {{--<div class="space-20"></div>--}}
+                                            {{--<div class="col-xs-12 team_manager_parrent_div">--}}
+                                                {{--<table id="teamsGridData" class="table " width="100%"></table>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="tab-pane" id="add_team">--}}
+                                        {{--<div class="space-20"></div>--}}
+                                        {{--<form id="frm_create_teams" class="form-horizontal" name="frm_create_teams">--}}
+                                            {{--<div class="form-group row fg_title">--}}
+                                                {{--<label class="col-sm-2 control-label col-form-label label_post" for="title">--}}
+                                                    {{--<span class="more_info"></span>--}}
+                                                    {{--<span class="label_title">نام</span>--}}
+                                                {{--</label>--}}
+                                                {{--<div class="col-sm-6">--}}
+                                                    {{--<input name="name" class="form-control" id="team_name" tab="1">--}}
+                                                {{--</div>--}}
+                                                {{--<div class="col-sm-4 messages"></div>--}}
+                                            {{--</div>--}}
+                                            {{--<div class="form-group row fg_title">--}}
+                                                {{--<label class="col-sm-2 control-label col-form-label label_post" for="title">--}}
+                                                    {{--<span class="more_info"></span>--}}
+                                                    {{--<span class="label_title">نام نمایشی</span>--}}
+                                                {{--</label>--}}
+                                                {{--<div class="col-sm-6">--}}
+                                                    {{--<input name="display_name" class="form-control" id="team_display_name" tab="1">--}}
+                                                {{--</div>--}}
+                                                {{--<div class="col-sm-4 messages"></div>--}}
+                                            {{--</div>--}}
+                                            {{--<div class="form-group row">--}}
+                                                {{--<label class="col-lg-2 col-sm-12 col-md-3 control-label col-form-label label_post" for="description">توضیحات</label>--}}
+                                                {{--<div class="col-6">--}}
+                                                    {{--<textarea class="form-control" name="description" id="team_description" rows="5"></textarea>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                            {{--<div class="clearfixed"></div>--}}
+                                            {{--<div class="col-12">--}}
+                                                {{--<button type="submit" class="float-right btn btn-success ml-2"><i class="fa fa-save margin_left_8"></i>اضافه کردن</button>--}}
+                                                {{--<button type="button" class="float-right btn bg-secondary color_white cancel_add_teams_btn"><i class="fa fa-times margin_left_8"></i>انصراف</button>--}}
+                                            {{--</div>--}}
+                                        {{--</form>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="tab-pane" id="edit_team"></div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                         <div class="tab-pane" id="permissin_category_manager">
                             <div class="space-20"></div>
                             <div class="tabbable">
@@ -464,10 +548,11 @@
                             <div id="show_form_permission_to_role"></div>
                         </div>
                         <div class="tab-pane" id="set_user_to_roles">
-                            <div id="show_form_roles_to_user">
-
-                            </div>
+                            <div id="show_form_roles_to_user"></div>
                         </div>
+                        {{--<div class="tab-pane" id="set_user_to_teams">--}}
+                            {{--<div id="show_form_teams_to_user"></div>--}}
+                        {{--</div>--}}
                         <div class="tab-pane" id="login_history">
                             <div class="space-20"></div>
                             <div class="col-xs-12 log_manager_parrent_div">
@@ -483,6 +568,7 @@
 @section('inline_js')
     @include('laravel_user_management::backend.helper.index.inline_js')
     @include('laravel_user_management::backend.helper.index.inline_js_roles')
+    {{--@include('laravel_user_management::backend.helper.index.inline_js_teams')--}}
     @include('laravel_user_management::backend.helper.index.inline_js_permissiones')
     @include('laravel_user_management::backend.helper.index.inline_js_logs')
 @stop

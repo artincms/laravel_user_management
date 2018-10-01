@@ -2,7 +2,6 @@
     //get gallery
     window['users_grid_columns'] = [
         {
-            width: '5%',
             data: 'id',
             title: 'ردیف',
             searchable: false,
@@ -12,7 +11,6 @@
             }
         },
         {
-            width: '5%',
             data: 'id',
             name: 'id',
             title: 'آی دی',
@@ -20,37 +18,34 @@
         },
 
         {
-            width: '10%',
+            width:'100px',
             data: 'username',
             name: 'username',
             title: 'نام کاربری',
         },
         {
-            width: '10%',
+            width:'100px',
             data: 'first_name',
             name: 'first_name',
             title: 'نام',
         },
         {
-            width: '10%',
+            width:'100px',
             data: 'last_name',
             name: 'last_name',
             title: 'نام خانوادگی',
         },
         {
-            width: '15%',
             data: 'email',
             name: 'email',
             title: 'ایمیل',
         },
         {
-            width: '15%',
             data: 'mobile',
             name: 'mobile',
             title: 'شماره همراه',
         },
         {
-            width: '5%',
             data: 'is_active',
             name: 'is_active',
             title: 'وضعیت',
@@ -64,7 +59,7 @@
             }
         },
         {
-            width: '10%',
+            width: '80px',
             data: 'email_confirmed',
             name: 'email_confirmed',
             title: 'تایید ایمیل',
@@ -78,7 +73,7 @@
             }
         },
         {
-            width: '10%',
+            width: '50px',
             data: 'email_confirmed',
             name: 'email_confirmed',
             title: 'تایید موبایل',
@@ -98,13 +93,11 @@
         //     title: 'آی دی',
         // },
         {
-            width: '10%',
             data: 'created_at',
             name: 'created_at',
             title: 'تاریخ ثبت نام',
         },
         {
-            width: '10%',
             searchable: false,
             sortable: false,
             title: 'عملیات',
@@ -116,6 +109,9 @@
                     '   <i class="fas fa-bars"></i> ' +
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
+                    '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
+                    '       <i class="fa fa-reply"></i><span class="ml-2">افزودن تم ها</span>' +
+                    '   </a>' +
                     '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
                     '       <i class="fa fa-reply"></i><span class="ml-2">افزودن نقش ها</span>' +
                     '   </a>' +
@@ -141,7 +137,7 @@
             rightColumns: 1
         };
         dataTablesGrid('#UsersGridData', 'UsersGridData', getUsersRoute, users_grid_columns, null, null, true, null, null, 1, 'desc',false,fixedColumn);
-    })
+    });
 
     function change_status_user(input) {
         var $this = $(input);
@@ -441,7 +437,7 @@
         $('#set_user_to_roles').append(generate_loader_html('لطفا منتظر بمانید...'));
         $.ajax({
             type: "POST",
-            url: '{{ route('LUM.Users.getUserRoleForm')}}',
+            url: '{{ route('LUM.Roles.getUserRoleForm')}}',
             dataType: "json",
             data: {
                 item_id: item_id,

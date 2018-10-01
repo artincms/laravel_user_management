@@ -38,7 +38,7 @@
     ];
     $(document).off("click", ".login_history_tab");
     $(document).on("click", ".login_history_tab", function () {
-        var getUsersRoute = '{{ route('LUM.Users.getLogs') }}';
+        var getUsersRoute = '{{ route('LUM.Roles.getLogs') }}';
         var fixedColumn = {
             leftColumns: 3,
             rightColumns: 1

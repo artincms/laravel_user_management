@@ -1,26 +1,24 @@
 <?php
 Route::group(['prefix' => config('laravel_user_management.backend_lum_route_prefix'), 'namespace' => 'ArtinCMS\LUM\Controllers', 'middleware' => config('laravel_user_management.backend_lum_middlewares')], function () {
-    Route::group(['prefix' => 'Users'], function () {
-        Route::get('manage', ['as' => 'LUM.Users.manage', 'uses' => 'UserManagementController@index']);
-        Route::post('getUsers', ['as' => 'LUM.Users.getUsers', 'uses' => 'UserManagementController@getUsers']);
-        Route::post('getEditUserForm', ['as' => 'LUM.Users.getEditUserForm', 'uses' => 'UserManagementController@getEditUserForm']);
-        Route::post('setUserStatus', ['as' => 'LUM.Users.setUserStatus', 'uses' => 'UserManagementController@setUserStatus']);
-        Route::post('setEmailStatus', ['as' => 'LUM.Users.setEmailStatus', 'uses' => 'UserManagementController@setEmailStatus']);
-        Route::post('trashUser', ['as' => 'LUM.Users.trashUser', 'uses' => 'UserManagementController@trashUser']);
-        Route::post('getUserRoleForm', ['as' => 'LUM.Users.getUserRoleForm', 'uses' => 'UserManagementController@getUserRoleForm']);
-        Route::post('addRoleToUsers', ['as' => 'LUM.Users.addRoleToUsers', 'uses' => 'UserManagementController@addRoleToUsers']);
-        Route::post('getLogs', ['as' => 'LUM.Users.getLogs', 'uses' => 'UserManagementController@getLogs']);
-        Route::post('addUsers', ['as' => 'LUM.Users.addUsers', 'uses' => 'UserManagementController@addUsers']);
-        Route::post('editUser', ['as' => 'LUM.Users.editUser', 'uses' => 'UserManagementController@editUser']);
+      Route::group(['prefix' => 'Roles'], function () {
+        Route::post('getRoles', ['as' => 'LUM.Roles.getRoles', 'uses' => 'RoleManagementController@getRoles']);
+        Route::post('addRoles', ['as' => 'LUM.Roles.addRoles', 'uses' => 'RoleManagementController@addRoles']);
+        Route::post('changeRoleStauts', ['as' => 'LUM.Roles.changeRoleStauts', 'uses' => 'RoleManagementController@changeRoleStauts']);
+        Route::post('getEditRolesForm', ['as' => 'LUM.Roles.getEditRolesForm', 'uses' => 'RoleManagementController@getEditRolesForm']);
+        Route::post('editRoles', ['as' => 'LUM.Roles.editRoles', 'uses' => 'RoleManagementController@editRoles']);
+        Route::post('trashRoles', ['as' => 'LUM.Roles.trashRoles', 'uses' => 'RoleManagementController@trashRoles']);
+        Route::post('getUserRoleForm', ['as' => 'LUM.Roles.getUserRoleForm', 'uses' => 'RoleManagementController@getUserRoleForm']);
+        Route::post('getUserTeamForm', ['as' => 'LUM.Roles.getUserTeamForm', 'uses' => 'RoleManagementController@getUserTeamForm']);
+        Route::post('addRoleToUsers', ['as' => 'LUM.Roles.addRoleToUsers', 'uses' => 'RoleManagementController@addRoleToUsers']);
+        Route::post('getLogs', ['as' => 'LUM.Roles.getLogs', 'uses' => 'RoleManagementController@getLogs']);
     });
-
-    Route::group(['prefix' => 'Roles'], function () {
-        Route::post('getRoles', ['as' => 'LUM.Roles.getRoles', 'uses' => 'UserManagementController@getRoles']);
-        Route::post('addRoles', ['as' => 'LUM.Roles.addRoles', 'uses' => 'UserManagementController@addRoles']);
-        Route::post('changeRoleStauts', ['as' => 'LUM.Roles.changeRoleStauts', 'uses' => 'UserManagementController@changeRoleStauts']);
-        Route::post('getEditRolesForm', ['as' => 'LUM.Roles.getEditRolesForm', 'uses' => 'UserManagementController@getEditRolesForm']);
-        Route::post('editRoles', ['as' => 'LUM.Roles.editRoles', 'uses' => 'UserManagementController@editRoles']);
-        Route::post('trashRoles', ['as' => 'LUM.Roles.trashRoles', 'uses' => 'UserManagementController@trashRoles']);
+    Route::group(['prefix' => 'Teams'], function () {
+        Route::post('getTeams', ['as' => 'LUM.Teams.getTeams', 'uses' => 'RoleManagementController@getTeams']);
+        Route::post('addTeams', ['as' => 'LUM.Teams.addTeams', 'uses' => 'RoleManagementController@addTeams']);
+        Route::post('changeTeamStauts', ['as' => 'LUM.Teams.changeTeamStauts', 'uses' => 'RoleManagementController@changeTeamStauts']);
+        Route::post('getEditTeamsForm', ['as' => 'LUM.Teams.getEditTeamsForm', 'uses' => 'RoleManagementController@getEditTeamsForm']);
+        Route::post('editTeams', ['as' => 'LUM.Teams.editTeams', 'uses' => 'RoleManagementController@editTeams']);
+        Route::post('trashTeams', ['as' => 'LUM.Teams.trashTeams', 'uses' => 'RoleManagementController@trashTeams']);
     });
     Route::group(['prefix' => 'Permissions'], function () {
         //permission category

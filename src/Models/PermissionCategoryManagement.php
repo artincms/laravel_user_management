@@ -22,6 +22,6 @@ class PermissionCategoryManagement extends Model
 
     public function childItems()
     {
-        return $this->hasMany('ArtinCMS\LUM\Models\PermissionManagement', 'category_id', 'id');
+        return $this->hasMany(config('laratrust.models.permission'), 'category_id', 'id');
     }
 }

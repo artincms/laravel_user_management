@@ -134,12 +134,50 @@ if (!function_exists('LUM_BuildTree'))
         return $tree;
     }
 }
+if (!function_exists('LUM_AllPermissionChilds'))
+{
+    function LUM_AllPermissionChilds($item_id)
+    {
+        $array_ids = [];
+        $item = \ArtinCMS\LUM\Models\PermissionCategoryManagement::with('Children', 'childItems')->find($item_id);
+        if (count($item->childItems) > 0)
+        {
+            foreach ($item->childItems as $child)
+            {
+                $array_ids [] = $child->id;
+            }
+        }
+        while ($item_id != 0)
+        {
+            if (count($item->Children) > 0)
+            {
+                foreach ($item->children as $cat)
+                {
+                    $item_id = $cat->id;
+                    $item = \ArtinCMS\LUM\Models\PermissionCategoryManagement::with('Children', 'childItems')->find($item_id);
+                    if (count($item->childItems) > 0)
+                    {
+                        foreach ($item->childItems as $child)
+                        {
+                            $array_ids [] = $child->id;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $item_id = 0 ;
+            }
+        }
 
+        return $array_ids;
+    }
+}
 if (!function_exists('generate_permissions_layout'))
 {
-    function generate_permissions_layout($model,$current_level = 0,$data = [] , $maximum_depth = false, $is_first_level = true)
+    function generate_permissions_layout($model, $current_level = 0, $data = [], $maximum_depth = false, $is_first_level = true)
     {
-        $items = $model::with('Children','childItems')->where('parent_id', $current_level)->get();
+        $items = $model::with('Children', 'childItems')->where('parent_id', $current_level)->get();
         if ($is_first_level)
         {
             $result_html = '';//'<ul class="navbar-nav">';
@@ -158,78 +196,78 @@ if (!function_exists('generate_permissions_layout'))
             if ($item->Children->count() > 0 && ($maximum_depth === false || $maximum_depth > 0))
             {
                 $result_html .= '<li class="nav-item card padding_10 margin_3" style="clear: both">';
-                $result_html .= '<div class="card-header permission_header"><div class="show_permission_checkbox '.LUM_Create_checkbox_Class($item,'show_div',false).'" data-status="0" id="show_div_'.$item->id.'" data-item_id="'.$item->id.'"><i class="far fa-circle '.LUM_Create_checkbox_Class($item,'font_check_i',false).'" id="font_check_'.$item->id.'"></i></div><div class="card-title">'.$item->title.'</div></div>';
+                $result_html .= '<div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_Create_checkbox_Class($item, 'show_div', false) . '" data-status="0" id="show_div_' . $item->id . '" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_Create_checkbox_Class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
                 if (count($item->childItems) > 0)
                 {
-                    $result_html .= '<ul>' ;
+                    $result_html .= '<ul>';
                     foreach ($item->childItems as $childitem)
                     {
-                        if(in_array($childitem->id,$data))
+                        if (in_array($childitem->id, $data))
                         {
-                            $check = 'checked' ;
-                            $selected = 'selected' ;
+                            $check = 'checked';
+                            $selected = 'selected';
                         }
                         else
                         {
-                            $check = '' ;
-                            $selected = '' ;
+                            $check = '';
+                            $selected = '';
                         }
-                        $result_html .= '<li  style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input '.$check.' name="permission[]" class="'.LUM_Create_checkbox_Class($childitem,'pch').' checkbox '.$selected.'" type="checkbox" value="" data-item_id="'.$childitem->id.'" onchange="change_checked(this)"><span>'.$childitem->display_name.'</span></label></div></li>' ;
+                        $result_html .= '<li  style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . ' name="permission[]" class="' . LUM_Create_checkbox_Class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '" onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
                     }
-                    $result_html .= '</ul>' ;
+                    $result_html .= '</ul>';
                 }
 
-                $result_html .= generate_permissions_layout($model, $item->id,$data, $maximum_depth, false);
+                $result_html .= generate_permissions_layout($model, $item->id, $data, $maximum_depth, false);
                 $result_html .= '</li>';
             }
             else
             {
                 if ($is_first_level)
                 {
-                    $result_html .= '<li class="nav-item card padding_10 margin_3" style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox '.LUM_Create_checkbox_Class($item,'show_div',false).'" id="show_div_'.$item->id.'" data-status="0" data-item_id="'.$item->id.'"><i class="far fa-circle '.LUM_Create_checkbox_Class($item,'font_check_i',false).'" id="font_check_'.$item->id.'"></i></div><div class="card-title">'. $item->title .'</div></div>';
+                    $result_html .= '<li class="nav-item card padding_10 margin_3" style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_Create_checkbox_Class($item, 'show_div', false) . '" id="show_div_' . $item->id . '" data-status="0" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_Create_checkbox_Class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
                     if (count($item->childItems) > 0)
                     {
-                        $result_html .= '<ul>' ;
+                        $result_html .= '<ul>';
                         foreach ($item->childItems as $childitem)
                         {
-                            if(in_array($childitem->id,$data))
+                            if (in_array($childitem->id, $data))
                             {
-                                $check = 'checked' ;
-                                $selected = 'selected' ;
+                                $check = 'checked';
+                                $selected = 'selected';
                             }
                             else
                             {
-                                $check = '' ;
-                                $selected = '' ;
+                                $check = '';
+                                $selected = '';
                             }
-                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input '.$check.'  name="permission[]" class="'.LUM_Create_checkbox_Class($childitem,'pch').' checkbox '.$selected.'" type="checkbox" value="" data-item_id="'.$childitem->id.'"  onchange="change_checked(this)"><span>'.$childitem->display_name.'</span></label></div></li>' ;
+                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . '  name="permission[]" class="' . LUM_Create_checkbox_Class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '"  onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
                         }
-                        $result_html .= '</ul>' ;
+                        $result_html .= '</ul>';
                     }
                     $result_html .= '</li>';
 
                 }
                 else
                 {
-                    $result_html .= '<li class="card padding_10 margin_3"  style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox '.LUM_Create_checkbox_Class($item,'show_div',false).'" id="show_div_'.$item->id.'" data-status="0" data-item_id="'.$item->id.'"><i class="far fa-circle '.LUM_Create_checkbox_Class($item,'font_check_i',false).'" id="font_check_'.$item->id.'"></i></div><div class="card-title">'. $item->title . '</div></div>';
+                    $result_html .= '<li class="card padding_10 margin_3"  style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_Create_checkbox_Class($item, 'show_div', false) . '" id="show_div_' . $item->id . '" data-status="0" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_Create_checkbox_Class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
                     if (count($item->childItems) > 0)
                     {
-                        $result_html .= '<ul>' ;
+                        $result_html .= '<ul>';
                         foreach ($item->childItems as $childitem)
                         {
-                            if(in_array($childitem->id,$data))
+                            if (in_array($childitem->id, $data))
                             {
-                                $check = 'checked' ;
-                                $selected = 'selected' ;
+                                $check = 'checked';
+                                $selected = 'selected';
                             }
                             else
                             {
-                                $check = '' ;
-                                $selected = '' ;
+                                $check = '';
+                                $selected = '';
                             }
-                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input '.$check.'  name="permission[]" class="'.LUM_Create_checkbox_Class($childitem,'pch').' checkbox '.$selected.'" type="checkbox" value="" data-item_id="'.$childitem->id.'" onchange="change_checked(this)"><span>'.$childitem->display_name.'</span></label></div></li>' ;
+                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . '  name="permission[]" class="' . LUM_Create_checkbox_Class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '" onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
                         }
-                        $result_html .= '</ul>' ;
+                        $result_html .= '</ul>';
                     }
                     $result_html .= '</li>';
                 }
@@ -248,88 +286,90 @@ if (!function_exists('generate_permissions_layout'))
         return $result_html;
     }
 }
+
 if (!function_exists('LUM_AllParentsPermission'))
 {
-    function LUM_AllParentsPermission($item,$is_item=true)
+    function LUM_AllParentsPermission($item, $is_item = true)
     {
-        if($is_item)
+        if ($is_item)
         {
-            $item_id = $item->category_id ;
-            $parrents[] =$item->category_id ;
+            $item_id = $item->category_id;
+            $parrents[] = $item->category_id;
         }
         else
         {
-            $item_id = $item->parent_id ;
-            if($item_id !=0)
+            $item_id = $item->parent_id;
+            if ($item_id != 0)
             {
-                $parrents[] =$item->parent_id ;
+                $parrents[] = $item->parent_id;
             }
             else
             {
-                $parrents = [] ;
+                $parrents = [];
             }
         }
-        if($item_id !=0)
+        if ($item_id != 0)
         {
             while ($item_id != 0)
             {
-                $pat =  ArtinCMS\LUM\Models\PermissionCategoryManagement::where('id',$item_id)->first();
-                if($pat)
+                $pat = ArtinCMS\LUM\Models\PermissionCategoryManagement::where('id', $item_id)->first();
+                if ($pat)
                 {
-                    if(isset($pat->parent_id))
+                    if (isset($pat->parent_id))
                     {
-                        $parrents[]=$pat->parent_id ;
-                        $item_id = $pat->parent_id ;
+                        $parrents[] = $pat->parent_id;
+                        $item_id = $pat->parent_id;
                     }
                     else
                     {
-                        $item_id = 0 ;
+                        $item_id = 0;
                     }
 
                 }
                 else
                 {
-                    $item_id = 0 ;
+                    $item_id = 0;
                 }
             }
         }
 
-        return $parrents ;
+        return $parrents;
     }
 }
 
 if (!function_exists('LUM_Create_checkbox_Class'))
 {
-    function LUM_Create_checkbox_Class($item,$pre_class,$is_item=true)
+    function LUM_Create_checkbox_Class($item, $pre_class, $is_item = true)
     {
-        $arra_ids = LUM_AllParentsPermission($item,$is_item);
-        $res = '' ;
+        $arra_ids = LUM_AllParentsPermission($item, $is_item);
+        $res = '';
         foreach ($arra_ids as $id)
         {
             if ($id)
             {
-                $res .=' '.$pre_class.'_'.$id ;
+                $res .= ' ' . $pre_class . '_' . $id;
             }
         }
-        return $res ;
+
+        return $res;
     }
 }
 
 if (!function_exists('LUM_CreateLogLogin'))
 {
-    function LUM_CreateLogLogin($request,$user_id)
+    function LUM_CreateLogLogin($request, $user_id)
     {
-        if($request && $user_id)
+        if ($request && $user_id)
         {
             $user = \ArtinCMS\LUM\Models\UserManagement::find($user_id);
-            $roles = $user->roles->toArray() ;
-            $permissions = $user->permissions->toArray() ;
-            $access = array_merge($roles,$permissions);
+            $roles = $user->roles->toArray();
+            $permissions = $user->permissions->toArray();
+            $access = array_merge($roles, $permissions);
             $log = new \ArtinCMS\LUM\Models\LogManagement();
-            $log->ip = $request->ip ;
-            $log->user_id = $user_id ;
-            $log->access_json = json_encode($access) ;
-            $log->save() ;
+            $log->ip = $request->ip;
+            $log->user_id = $user_id;
+            $log->access_json = json_encode($access);
+            $log->save();
         }
     }
 }
