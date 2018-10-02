@@ -177,7 +177,7 @@
                 presence: {message: '^<strong>نام ضروری است.</strong>'}
             },
         };
-        init_select2_ajax('#permission_category_parrent', '{{route('LUM.Permissions.autoCompletePermissionCategory')}}');
+        init_select2_ajax('#permission_category_parrent', '{{route('LUM.Permissions.autoCompletePermissionCategory')}}',true);
         init_validatejs(frm__add_permission_categorys, create_permission_categorys_constraints, ajax_func_add_permission_categorys);
         function ajax_func_add_permission_categorys(formElement) {
             var formData = new FormData(formElement);
@@ -258,44 +258,6 @@
                 item_id:item_id
             };
             dataTablesGrid('#PermissionsGridData', 'PermissionsGridData', getPermissionsRoute, permissions_grid_columns,data_permission);
-            var frm__add_permissions = document.querySelector("#frm_create_permissions");
-            var create_permissions_constraints = {
-                name: {
-                    presence: {message: '^<strong>نام ضروری است.</strong>'}
-                },
-                display_name: {
-                    presence: {message: '^<strong>نام نمایشی ضروری است.</strong>'}
-                },
-            };
-            init_validatejs(frm__add_permissions, create_permissions_constraints, ajax_func_add_permissions);
-            function ajax_func_add_permissions(formElement) {
-                var formData = new FormData(formElement);
-                $.ajax({
-                    type: "POST",
-                    url: '{{ route('LUM.Permissions.addPermissions')}}',
-                    dataType: "json",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                    $('#frm_create_permissions .total_loader').remove();
-                    if (!data.success) {
-                        showMessages(data.message, 'form_message_box', 'error', formElement);
-                        showErrors(formElement, data.errors);
-                    }
-                    else {
-                        clear_form_elements('#frm_create_permissions');
-                        menotify('success', data.title, data.message);
-                        PermissionsGridData.ajax.reload(null, false);
-                        $('a[href="#manage_tab_permission"]').click();
-                    }
-                }
-            });
-            }
-            $(document).off("click", ".cancel_add_permissions_btn");
-            $(document).on("click", ".cancel_add_permissions_btn", function () {
-                $('a[href="#manage_tab_permission"]').click();
-            });
         //--------------------------------active item ---------------------------------------------------//
         function change_is_active_permission(input) {
             var checked = input.checked;
@@ -337,10 +299,10 @@
             var item_id = $(this).data('item_id');
             var title = $(this).data('title');
             $('.span_edit_permission_tab').html('ویرایش آیتم: ' + title);
-            get_edit_rolse_form(item_id);
+            get_edit_permissions_form(item_id);
         });
 
-        function get_edit_rolse_form(item_id) {
+        function get_edit_permissions_form(item_id) {
             $('#edit_permission').children().remove();
             $('#edit_permission').append(generate_loader_html('لطفا منتظر بمانید...'));
             $.ajax({
@@ -352,7 +314,6 @@
             },
             success: function (result) {
                 $('#edit_permission .total_loader').remove();
-                console.log(result);
                 if (result.success) {
                     $('#edit_permission').append(result.get_edit_item);
                     $('.edit_permission_tab').removeClass('hidden');
@@ -378,7 +339,7 @@
                             processData: false,
                             contentType: false,
                             success: function (data) {
-                            $('#frm_create_permissions .total_loader').remove();
+                            $('#frm_edit_permissions .total_loader').remove();
                             if (!data.success) {
                                 showMessages(data.message, 'form_message_box', 'error', formElement);
                                 showErrors(formElement, data.errors);
@@ -545,5 +506,45 @@
     $(document).on("click", ".cancel_add_permission_btn", function () {
         $('a[href="#manage_tab_permission_category"]').click();
         $('.permissin_manager_tab').addClass('hidden');
+    });
+
+    //---------------------------------------------------Add permissions-----------------------------------------------------//
+    var frm__add_permissions = document.querySelector("#frm_create_permissions");
+    var create_permissions_constraints = {
+        name: {
+            presence: {message: '^<strong>نام ضروری است.</strong>'}
+        },
+        display_name: {
+            presence: {message: '^<strong>نام نمایشی ضروری است.</strong>'}
+        },
+    };
+    init_validatejs(frm__add_permissions, create_permissions_constraints, ajax_func_add_permissions);
+    function ajax_func_add_permissions(formElement) {
+        var formData = new FormData(formElement);
+        $.ajax({
+            type: "POST",
+            url: '{{ route('LUM.Permissions.addPermissions')}}',
+            dataType: "json",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $('#frm_create_permissions .total_loader').remove();
+                if (!data.success) {
+                    showMessages(data.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, data.errors);
+                }
+                else {
+                    clear_form_elements('#frm_create_permissions');
+                    menotify('success', data.title, data.message);
+                    PermissionsGridData.ajax.reload(null, false);
+                    $('a[href="#manage_tab_permission"]').click();
+                }
+            }
+        });
+    }
+    $(document).off("click", ".cancel_add_permissions_btn");
+    $(document).on("click", ".cancel_add_permissions_btn", function () {
+        $('a[href="#manage_tab_permission"]').click();
     });
 </script>

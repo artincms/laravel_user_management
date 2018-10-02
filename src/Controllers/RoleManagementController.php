@@ -2,7 +2,9 @@
 
 namespace ArtinCMS\LUM\Controllers;
 
+use ArtinCMS\LUM\Models\LogManagement;
 use DB;
+use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
@@ -53,43 +55,64 @@ class RoleManagementController extends Controller
 
     public function addRoles(Request $request)
     {
-        DB::beginTransaction();
-        try
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:'.config('laratrust.tables.roles').',name,Null,id,deleted_at,NULL',
+        ],[
+            'name.unique'=>'نام تکراری است .',
+            'name.required'=>'نام الزامی است .',
+        ]);
+        if ($validator->fails())
         {
-            $roles = new  $this->role_model;
-            $roles->name = $request->name;
-            $roles->display_name = $request->display_name;
-            $roles->description = $request->description;
-            if (auth()->check())
-            {
-                $auth = auth()->id();
-            }
-            else
-            {
-                $auth = 0;
-
-            }
-            $roles->created_by = $auth;
-            $roles->save();
-            $res =
-                [
-                    'success' => true,
-                    'title'   => "ثبت نقش",
-                    'message' => 'نقش با موفقیت ثبت شد.'
-                ];
-            DB::commit();
-
-            return $res;
-        } catch (\Exception $e)
-        {
-            DB::rollback();
+            $api_errors = validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
-                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    'errors'  => $api_errors,
+                    'message' => [['title' => 'لطفا موارد زیر را بررسی نمایید:', 'items' => $api_errors]]
                 ];
+            return json_encode($res) ;
 
-            return json_encode($res);
+        }
+        else
+        {
+            DB::beginTransaction();
+            try
+            {
+                $roles = new  $this->role_model;
+                $roles->name = $request->name;
+                $roles->display_name = $request->display_name;
+                $roles->description = $request->description;
+                if (auth()->check())
+                {
+                    $auth = auth()->id();
+                }
+                else
+                {
+                    $auth = 0;
+
+                }
+                $roles->created_by = $auth;
+                $roles->save();
+                $res =
+                    [
+                        'success' => true,
+                        'title'   => "ثبت نقش",
+                        'message' => 'نقش با موفقیت ثبت شد.'
+                    ];
+                DB::commit();
+
+                return $res;
+            } catch (\Exception $e)
+            {
+                DB::rollback();
+                $res =
+                    [
+                        'success' => false,
+                        'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    ];
+
+                return json_encode($res);
+            }
         }
     }
 
@@ -259,43 +282,64 @@ class RoleManagementController extends Controller
 
     public function editRoles(Request $request)
     {
-        DB::beginTransaction();
-        try
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:'.config('laratrust.tables.roles').',name,'.LUM_GetDecodeId($request->item_id).',id,deleted_at,NULL',
+        ],[
+            'name.unique'=>'نام تکراری است .',
+            'name.required'=>'نام الزامی است .',
+        ]);
+        if ($validator->fails())
         {
-            $roles = $this->role_model::find(LUM_GetDecodeId($request->item_id));
-            $roles->name = $request->name;
-            $roles->display_name = $request->display_name;
-            $roles->description = $request->description;
-            if (auth()->check())
-            {
-                $auth = auth()->id();
-            }
-            else
-            {
-                $auth = 0;
-
-            }
-            $roles->created_by = $auth;
-            $roles->save();
-            $res =
-                [
-                    'success' => true,
-                    'title'   => "ثبت نقش",
-                    'message' => 'نقش با موفقیت ثبت شد.'
-                ];
-            DB::commit();
-
-            return $res;
-        } catch (\Exception $e)
-        {
-            DB::rollback();
+            $api_errors = validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
-                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    'errors'  => $api_errors,
+                    'message' => [['title' => 'لطفا موارد زیر را بررسی نمایید:', 'items' => $api_errors]]
                 ];
+            return json_encode($res) ;
 
-            return json_encode($res);
+        }
+        else
+        {
+            DB::beginTransaction();
+            try
+            {
+                $roles = $this->role_model::find(LUM_GetDecodeId($request->item_id));
+                $roles->name = $request->name;
+                $roles->display_name = $request->display_name;
+                $roles->description = $request->description;
+                if (auth()->check())
+                {
+                    $auth = auth()->id();
+                }
+                else
+                {
+                    $auth = 0;
+
+                }
+                $roles->created_by = $auth;
+                $roles->save();
+                $res =
+                    [
+                        'success' => true,
+                        'title'   => "ثبت نقش",
+                        'message' => 'نقش با موفقیت ثبت شد.'
+                    ];
+                DB::commit();
+
+                return $res;
+            } catch (\Exception $e)
+            {
+                DB::rollback();
+                $res =
+                    [
+                        'success' => false,
+                        'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    ];
+
+                return json_encode($res);
+            }
         }
     }
 

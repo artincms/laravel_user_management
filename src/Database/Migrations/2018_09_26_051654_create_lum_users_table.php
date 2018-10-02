@@ -34,9 +34,11 @@ class CreateLumUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
-            $table->unique(['username','deleted_at'], 'users_username_unique', 'BTREE');
-            $table->unique(['email','deleted_at'], 'users_email_unique', 'BTREE');
         });
+
+        DB::statement("ALTER TABLE lum_users ADD unique_md5_username CHAR (32) AS (MD5(CONCAT_WS('X',username,deleted_at))) PERSISTENT UNIQUE");
+        DB::statement("ALTER TABLE lum_users ADD unique_md5_email CHAR (32) AS (MD5(CONCAT_WS('X',email,deleted_at))) PERSISTENT UNIQUE");
+//        DB::statement("ALTER TABLE lum_users ADD unique_md5_email CHAR (32) AS (MD5(CONCAT_WS('X',mobile,deleted_at))) PERSISTENT UNIQUE");
     }
 
     /**

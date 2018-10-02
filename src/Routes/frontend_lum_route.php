@@ -13,6 +13,7 @@ Route::group(['prefix' => config('laravel_user_management.frontend_lum_route_pre
         Route::get('reset/{token}', ['as' => 'LUM.Password.reset', 'uses' => 'ResetPasswordController@howResetForm']);
     });
 
-    Route::get('register', ['as' => 'LUM.register', 'uses' => 'RegisterController@showRegistrationForm']);
+    Route::get('register', ['as' => 'LUM.register', 'uses' => 'RegisterController@index']);
     Route::post('register', ['as' => 'LUM.register', 'uses' => 'RegisterController@register']);
+    Route::post('addRegister', ['as' => 'LUM.register.addRegister', 'uses' => 'RegisterController@addRegister']);
 });

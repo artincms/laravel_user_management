@@ -1,110 +1,57 @@
-@extends('laravel_user_management::layouts.front_master')
+@extends('laravel_user_management::layouts.frontend_master')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('lum_login.register') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('LUM.register') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
-
-                                @if ($errors->has('name'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.last_name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ old('last_name') }}" required autofocus>
-
-                                @if ($errors->has('last_name'))
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('last_name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="father_name" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.father_name') }}</label>
-                            <div class="col-md-6">
-                                <input id="father_name" type="text" class="form-control{{ $errors->has('father_name') ? ' is-invalid' : '' }}" name="father_name" value="{{ old('father_name') }}" required autofocus>
-                                @if ($errors->has('father_name'))
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('father_name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.email_address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="mobile" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.mobile') }}</label>
-                            <div class="col-md-6">
-                                <input id="mobile" type="text" class="form-control{{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="{{ old('mobile') }}" required autofocus>
-                                @if ($errors->has('mobile'))
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('mobile') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('lum_login.confirm_password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('lum_login.register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+    <div class="show_register_form">
+        <form  id="frm_user_register" class="form-horizontal" name="frm_user_register">
+            <div class="panel panel-body login-form">
+                <div class="text-center">
+                    <div class="icon-object border-success text-success"><i class="icon-plus3"></i></div>
+                    <h5 class="content-group">ثبت نام کاربران</h5>
                 </div>
+                <div class="content-divider text-muted form-group"><span>اطلاعات ثبت نام</span></div>
+
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="text" name="username" class="form-control" placeholder="نام کاربری">
+                    <div class="form-control-feedback">
+                        <i class="icon-user-check text-muted"></i>
+                    </div>
+                    <span class="help-block text-danger messages"></span>
+                </div>
+
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="password" class="form-control" name="password" placeholder="گذرواژه">
+                    <div class="form-control-feedback">
+                        <i class="icon-user-lock text-muted"></i>
+                    </div>
+                    <span class="help-block text-danger messages"></span>
+                </div>
+
+                {{--<div class="content-divider text-muted form-group"><span>اطلاعات شخصی</span></div>--}}
+
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="text" class="form-control" name="email" placeholder="ایمیل">
+                    <div class="form-control-feedback">
+                        <i class="icon-mention text-muted"></i>
+                    </div>
+                    <span class="help-block text-danger messages"></span>
+                </div>
+                <div class="content-divider text-muted form-group"><span>قوانین</span></div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="styled">
+                            قبول <a href="{{$term_url}}">قوانین </a>سایت
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn bg-teal btn-block btn-lg">ثبت نام <i class="icon-circle-left2 position-right"></i></button>
             </div>
-        </div>
+        </form>
     </div>
-</div>
+@endsection
+
+@section('inline_js')
+    @include('laravel_user_management::frontend.auth.helper.register.inline_js')
 @endsection

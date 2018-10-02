@@ -118,7 +118,7 @@
                     '   <a class="btn_edit_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
                     '       <i class="fa fa-edit"></i><span class="ml-2">ویرایش</span>' +
                     '   </a>' +
-                    '    <a class="btn_trash_gallery pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + ' ">' +
+                    '    <a class="btn_trash_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + ' ">' +
                     '       <i class="fa fa-trash"></i><span class="ml-2">حذف</span>' +
                     '   </a>'
                 '  </div>' +
@@ -140,8 +140,8 @@
         var $this = $(input);
         var item_id = $this.data('item_id');
         var checked = input.checked ;
-        var parameters = {status: checked,item_id:item_id};
-        yesNoAlert('تغییر وضعیت کاربر', 'از تغییر وضعیت کاربر مطمئن هستید ؟', 'warning', 'بله، وضعیت کاربر را تغییر بده!', 'لغو', set_user_status, parameters,remove_checked,parameters);
+        var parameters = {is_active: checked,item_id:item_id};
+        yesNoAlert('تغییر وضعیت کاربر', 'از تغییر وضعیت کاربر مطمئن هستید ؟', 'warning', 'بله، وضعیت کاربر را تغییر بده!', 'لغو', set_user_status, parameters,remove_checked_user,parameters);
     }
 
     function set_user_status(params) {
@@ -164,9 +164,9 @@
     });
     }
 
-    function remove_checked (params) {
-        var $this =$('#change_user_status_'+params.item_id) ;
-        if(params.status)
+    function remove_checked_user (params) {
+        var $this =$('#change_user_status_'+params.item_id) ;console.log($this);
+        if(params.is_active)
         {
             $this.prop('checked', false);
         }
@@ -175,13 +175,12 @@
             $this.prop('checked', true);
         }
     }
-    /*-------------------------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------Change Email Status-------------------------------------------------------------*/
     function change_status_email(input) {
         var $this = $(input);
-        var user_id = $this.data('item_id');
+        var item_id = $this.data('item_id');
         var checked = input.checked ;
-        var item_id = input.id ;
-        var parameters = {user_id: user_id, status: checked,item_id:item_id};
+        var parameters = {is_active: checked,item_id:item_id};
         yesNoAlert(' تغییر وضعیت', 'از تغییر وضعیت تایید ایمیل مطمئن هستید ؟', 'warning', 'بله، وضعیت ایمیل  را تغییر بده!', 'لغو', set_email_status, parameters,remove_checked_email,parameters);
     }
     function set_email_status(params) {
@@ -191,17 +190,67 @@
             url: '{!!  route('LUM.Users.setEmailStatus') !!}',
             data: params,
             success: function (result) {
-            if (result.success) {
-                swal({
-                    position: 'top-end',
-                    type: 'success',
-                    title: result.title,
-                    text : result.message ,
-                    showConfirmButton: true,
-                })
+                if (result.success) {
+                    menotify('success', result.title, result.message);
+                }
+                else
+                {
+                    Messages(data.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, data.errors);
+                }
+
             }
+        });
+    }
+    function remove_checked_email (params) {
+        var $this =$('#change_email_status_'+params.item_id) ;console.log($this);
+        if(params.is_active)
+        {
+            $this.prop('checked', false);
         }
-    });
+        else
+        {
+            $this.prop('checked', true);
+        }
+    }
+
+    /*------------------------------------------------Change mobile Status-------------------------------------------------------------*/
+    function change_status_mobile(input) {
+        var $this = $(input);
+        var item_id = $this.data('item_id');
+        var checked = input.checked ;
+        var parameters = {is_active: checked,item_id:item_id};
+        yesNoAlert(' تغییر وضعیت', 'از تغییر وضعیت تایید ایمیل مطمئن هستید ؟', 'warning', 'بله، وضعیت ایمیل  را تغییر بده!', 'لغو', set_mobile_status, parameters,remove_checked_mobile,parameters);
+    }
+    function set_mobile_status(params) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '{!!  route('LUM.Users.setMobileStatus') !!}',
+            data: params,
+            success: function (result) {
+                if (result.success) {
+                    menotify('success', result.title, result.message);
+                }
+                else
+                {
+                    Messages(data.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, data.errors);
+                }
+
+            }
+        });
+    }
+    function remove_checked_mobile (params) {
+        var $this =$('#change_mobile_status_'+params.item_id) ;console.log($this);
+        if(params.is_active)
+        {
+            $this.prop('checked', false);
+        }
+        else
+        {
+            $this.prop('checked', true);
+        }
     }
     /*-----------------------------------------------------------------------------*/
     $(document).off("click", ".btn_trash_user");
@@ -485,6 +534,7 @@
             email: {message: '^<strong>ایمیل وارد شده معتبر نمی باشد.</strong>'}
         },
         mobile: {
+            // presence: {message: '^<strong>وارد کردن موبایل الزامی است.</strong>'},
             iranMobileNumber: {message: '^<strong>شماره همراه وارد شده صحیح نمی باشد.</strong>'},
             length: {maximum: 11, message: '^<strong>شماره همراه نمی‌تواند بیشتر از 11 کاراکتر باشد.</strong>'}
         },
@@ -518,7 +568,8 @@
             success: function (data) {
                 $('#frm_create_users .total_loader').remove();
                 if (data.success) {
-                    clear_form_elements('#frm_create_users');
+                    $('.edit_user_tab').addClass('hidden');
+                    $('#edit_user').html('');
                     menotify('success', data.title, data.message);
                     UsersGridData.ajax.reload(null, false);
                     $('a[href="#manage_user"]').click();
@@ -552,48 +603,44 @@
             },
             success: function (result) {
                 $('#edit_user .total_loader').remove();
-                console.log(result);
                 if (result.success) {
                     $('#edit_user').append(result.get_edit_item);
                     $('.edit_user_tab').removeClass('hidden');
                     $('a[href="#edit_user"]').click();
+                }
+                else
+                {
+                    showMessages(result.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, result.errors);
+                }
+            }
+        });
+    }
 
-                    var edit_permission_form_id = document.querySelector("#frm_edit_users");
-                    init_validatejs(edit_permission_form_id, create_users_constraints, ajax_func_edit_users);
-                    function ajax_func_edit_users(formElement) {
-                        var formData = new FormData(formElement);
-                        $.ajax({
-                            type: "POST",
-                            url: '{{ route('LUM.Users.editUser')}}',
-                            dataType: "json",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (data) {
-                                $('#frm_edit_users .total_loader').remove();
-                                if (data.success) {
-                                    clear_form_elements('#frm_create_permissions');
-                                    menotify('success', data.title, data.message);
-                                    $('.edit_user_tab').addClass('hidden');
-                                    UsersGridData.ajax.reload(null, false);
-                                    $('a[href="#manage_user"]').click();
-                                }
-                                else {
-                                    showMessages(data.message, 'form_message_box', 'error', formElement);
-                                    showErrors(formElement, data.errors);
-                                }
-                            }
-                        });
-                    }
-                    $(document).off("click", ".cancel_edit_user_btn");
-                    $(document).on("click", ".cancel_edit_user_btn", function () {
-                        $('a[href="#manage_user"]').click();
-                        $('.edit_user_tab').addClass('hidden');
-                        $('#edit_user').html('');
-                    });
+    /*___________________________________________________Trash Users_____________________________________________________________________*/
+    $(document).off("click", ".btn_trash_user");
+    $(document).on("click", ".btn_trash_user", function () {
+        var item_id = $(this).data('item_id');
+        var title = $(this).data('title');
+        desc = 'بله کاربر( ' + title + ' ) را حذف کن !';
+        var parameters = {item_id: item_id};
+        yesNoAlert('حذف کاربر', 'از حذف کاربر مطمئن هستید ؟', 'warning', desc, 'لغو', trash_user, parameters);
+    });
+
+    function trash_user(params) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '{!!  route('LUM.Users.trashUser') !!}',
+            data: params,
+            success: function (data) {
+                if (!data.success) {
+                    showMessages(data.message, 'form_message_box', 'error', formElement);
+                    showErrors(formElement, data.errors);
                 }
                 else {
-
+                    menotify('success', data.title, data.message);
+                    UsersGridData.ajax.reload(null, false);
                 }
             }
         });

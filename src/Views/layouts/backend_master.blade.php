@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('page_title','Laravel Tagable')</title>
+    <title>@yield('page_title','Laravel UserManagement')</title>
 
     <!-- global stylesheets -->
     <link href="{{asset('vendor/laravel_user_management/fonts/IranSans/style.min.css')}}" rel="stylesheet" type="text/css">

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class User_Request extends FormRequest
+class User_Edit_Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,13 +30,25 @@ class User_Request extends FormRequest
                 // Person
                 'first_name'            => 'required|min:2|max:60',
                 'last_name'             => 'required|min:2|max:60',
-//                'mobile'                => 'required|mobile||unique:lum_users,mobile,NULL,id,deleted_at,NULL',
-                'email'                 => 'required|email||unique:lum_users,email,NULL,id,deleted_at,NULL',
-                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,NULL,id,deleted_at,NULL',
-                'password'              => 'required|confirmed|min:6',
-                'password_confirmation' => 'required|min:6',
-            ];
+//                'mobile'                => 'required|mobile||unique:lum_users,mobile,'.LUM_GetDecodeId($this->request->get('item_id')).',id,deleted_at,NULL',
+                'email'                 => 'required|email||unique:lum_users,email,'.LUM_GetDecodeId($this->request->get('item_id')).',id,deleted_at,NULL',
+                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,'.LUM_GetDecodeId($this->request->get('item_id')).',id,deleted_at,NULL',
 
+            ];
+        if($this->request->get('password')  || $this->request->get('confirm_password'))
+        {
+            $role_pass =
+                [
+                    'password'              => 'required|confirmed|min:6',
+                    'password_confirmation' => 'required|min:6',
+                ];
+        }
+        else
+        {
+            $role_pass = [] ;
+        }
+
+        $roles = array_merge($roles,$role_pass) ;
         return $roles;
     }
 

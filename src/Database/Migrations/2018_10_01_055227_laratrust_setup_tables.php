@@ -90,6 +90,9 @@ class LaratrustSetupTables extends Migration
 
             $table->primary(['permission_id', 'role_id']);
         });
+        DB::statement("ALTER TABLE roles ADD unique_md5 CHAR (32) AS (MD5(CONCAT_WS('X',name,deleted_at))) PERSISTENT UNIQUE");
+        DB::statement("ALTER TABLE permissions ADD unique_md5 CHAR (32) AS (MD5(CONCAT_WS('X',name,deleted_at))) PERSISTENT UNIQUE");
+
     }
 
     /**

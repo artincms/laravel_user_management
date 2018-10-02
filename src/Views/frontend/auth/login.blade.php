@@ -1,4 +1,4 @@
-@extends('laravel_user_management::layouts.front_master')
+@extends('laravel_user_management::layouts.frontend_master')
 
 @section('content')
 <div class="container">

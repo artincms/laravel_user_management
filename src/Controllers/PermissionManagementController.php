@@ -2,13 +2,13 @@
 
 namespace ArtinCMS\LUM\Controllers;
 
-use ArtinCMS\LUM\Models\PermissionCategoryManagement;
-use ArtinCMS\LUM\Models\UserManagement;
-use Yajra\DataTables\Facades\DataTables;
+use DB;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
+use ArtinCMS\LUM\Models\UserManagement;
+use Yajra\DataTables\Facades\DataTables;
+use ArtinCMS\LUM\Models\PermissionCategoryManagement;
 
 class PermissionManagementController extends Controller
 {
@@ -252,44 +252,64 @@ class PermissionManagementController extends Controller
 
     public function addPermissions(Request $request)
     {
-        DB::beginTransaction();
-        try
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:'.config('laratrust.tables.permissions').',name,NULL,id,deleted_at,NULL',
+        ],[
+            'name.unique'=>'نام تکراری است .'
+        ]);
+        if ($validator->fails())
         {
-            $permissions = new $this->permission_model;
-            $permissions->name = $request->name;
-            $permissions->category_id =LUM_GetDecodeId($request->category_id);
-            $permissions->display_name = $request->display_name;
-            $permissions->description = $request->description;
-            if (auth()->check())
-            {
-                $auth = auth()->id();
-            }
-            else
-            {
-                $auth = 0;
-
-            }
-            $permissions->created_by = $auth;
-            $permissions->save();
-            $res =
-                [
-                    'success' => true,
-                    'title'   => "ثبت دسترسی",
-                    'message' => 'دسترسی با موفقیت ثبت شد.'
-                ];
-            DB::commit();
-
-            return $res;
-        } catch (\Exception $e)
-        {
-            DB::rollback();
+            $api_errors = validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
-                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    'errors'  => $api_errors,
+                    'message' => [['title' => 'لطفا موارد زیر را بررسی نمایید:', 'items' => $api_errors]]
                 ];
+            return json_encode($res) ;
 
-            return json_encode($res);
+        }
+        else
+        {
+            DB::beginTransaction();
+            try
+            {
+                $permissions = new $this->permission_model;
+                $permissions->name = $request->name;
+                $permissions->category_id =LUM_GetDecodeId($request->category_id);
+                $permissions->display_name = $request->display_name;
+                $permissions->description = $request->description;
+                if (auth()->check())
+                {
+                    $auth = auth()->id();
+                }
+                else
+                {
+                    $auth = 0;
+
+                }
+                $permissions->created_by = $auth;
+                $permissions->save();
+                $res =
+                    [
+                        'success' => true,
+                        'title'   => "ثبت دسترسی",
+                        'message' => 'دسترسی با موفقیت ثبت شد.'
+                    ];
+                DB::commit();
+
+                return $res;
+            } catch (\Exception $e)
+            {
+                DB::rollback();
+                $res =
+                    [
+                        'success' => false,
+                        'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    ];
+
+                return json_encode($res);
+            }
         }
     }
 
@@ -335,6 +355,7 @@ class PermissionManagementController extends Controller
         {
             $item = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
+            $item->category_encode_id = LUM_GetEncodeId($item->category_id);
             $item_form = view('laravel_user_management::backend.view.edit_permission_form', compact('item'))->render();
             DB::commit();
             $res['success'] = true;
@@ -356,44 +377,66 @@ class PermissionManagementController extends Controller
 
     public function editPermissions(Request $request)
     {
-        DB::beginTransaction();
-        try
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:'.config('laratrust.tables.permissions').',name,'.LUM_GetDecodeId($request->item_id).',id,deleted_at,NULL',
+        ],[
+            'name.unique'=>'نام تکراری است .',
+            'name.required'=>'نام الزامی است .',
+        ]);
+        if ($validator->fails())
         {
-            $permissions = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
-            $permissions->name = $request->name;
-            $permissions->display_name = $request->display_name;
-            $permissions->description = $request->description;
-            if (auth()->check())
-            {
-                $auth = auth()->id();
-            }
-            else
-            {
-                $auth = 0;
-
-            }
-            $permissions->created_by = $auth;
-            $permissions->save();
-            $res =
-                [
-                    'success' => true,
-                    'title'   => "ثبت دسترسی",
-                    'message' => 'دسترسی با موفقیت ثبت شد.'
-                ];
-            DB::commit();
-
-            return $res;
-        } catch (\Exception $e)
-        {
-            DB::rollback();
+            $api_errors = validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
-                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    'errors'  => $api_errors,
+                    'message' => [['title' => 'لطفا موارد زیر را بررسی نمایید:', 'items' => $api_errors]]
                 ];
+            return json_encode($res) ;
 
-            return json_encode($res);
         }
+        else
+        {
+            DB::beginTransaction();
+            try
+            {
+                $permissions = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
+                $permissions->name = $request->name;
+                $permissions->display_name = $request->display_name;
+                $permissions->description = $request->description;
+                if (auth()->check())
+                {
+                    $auth = auth()->id();
+                }
+                else
+                {
+                    $auth = 0;
+
+                }
+                $permissions->created_by = $auth;
+                $permissions->save();
+                $res =
+                    [
+                        'success' => true,
+                        'title'   => "ثبت دسترسی",
+                        'message' => 'دسترسی با موفقیت ثبت شد.'
+                    ];
+                DB::commit();
+
+                return $res;
+            } catch (\Exception $e)
+            {
+                DB::rollback();
+                $res =
+                    [
+                        'success' => false,
+                        'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                    ];
+
+                return json_encode($res);
+            }
+        }
+
     }
 
     public function trashPermissions(Request $request)
