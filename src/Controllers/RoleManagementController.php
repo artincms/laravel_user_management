@@ -2,31 +2,30 @@
 
 namespace ArtinCMS\LUM\Controllers;
 
-use ArtinCMS\LUM\Models\PermissionCategoryManagement;
-use ArtinCMS\LUM\Models\UserManagement;
-use Yajra\DataTables\Facades\DataTables;
-use Validator;
+use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class RoleManagementController extends Controller
 {
 
-    protected $role_model = '';
-    protected $permission_model = '';
-    protected $team_model = '';
+    protected $role_model;
+    protected $user_model;
+    protected $permission_model;
+    protected $team_model;
 
     public function __construct(array $settings = [])
     {
-        $this->role_model =config('laratrust.models.role');
-        $this->team_model =config('laratrust.models.team');
-        $this->permission_model =config('laratrust.models.permission');
+        $this->role_model = config('laratrust.models.role');
+        $this->team_model = config('laratrust.models.team');
+        $this->permission_model = config('laratrust.models.permission');
+        $this->user_model = config('laravel_user_management.user_model');
     }
 
     public function getRoles(Request $request)
     {
-        $roles =  $this->role_model::query();
+        $roles = $this->role_model::query();
 
         return Datatables::eloquent($roles)
             ->editColumn('id', function ($data) {
@@ -40,7 +39,7 @@ class RoleManagementController extends Controller
 
     public function getTeams(Request $request)
     {
-        $roles =  $this->team_model::query();
+        $roles = $this->team_model::query();
 
         return Datatables::eloquent($roles)
             ->editColumn('id', function ($data) {
@@ -229,7 +228,7 @@ class RoleManagementController extends Controller
                 ];
 
             return json_encode($res);
-        };
+        }
     }
 
     public function getEditTeamsForm(Request $request)
@@ -255,7 +254,7 @@ class RoleManagementController extends Controller
                 ];
 
             return json_encode($res);
-        };
+        }
     }
 
     public function editRoles(Request $request)
@@ -263,7 +262,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $roles =  $this->role_model::find(LUM_GetDecodeId($request->item_id));
+            $roles = $this->role_model::find(LUM_GetDecodeId($request->item_id));
             $roles->name = $request->name;
             $roles->display_name = $request->display_name;
             $roles->description = $request->description;
@@ -305,7 +304,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $roles =  $this->team_model::find(LUM_GetDecodeId($request->item_id));
+            $roles = $this->team_model::find(LUM_GetDecodeId($request->item_id));
             $roles->name = $request->name;
             $roles->display_name = $request->display_name;
             $roles->description = $request->description;
@@ -347,7 +346,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $role =  $this->role_model::find(LUM_GetDecodeId($request->item_id));
+            $role = $this->role_model::find(LUM_GetDecodeId($request->item_id));
             $role->delete();
             DB::commit();
             $res =
@@ -356,6 +355,7 @@ class RoleManagementController extends Controller
                     'title'   => "حذف نقش",
                     'message' => 'نقش با موفقیت حذف شد.'
                 ];
+
             return $res;
         } catch (\Exception $e)
         {
@@ -376,7 +376,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $role =  $this->team_model::find(LUM_GetDecodeId($request->item_id));
+            $role = $this->team_model::find(LUM_GetDecodeId($request->item_id));
             $role->delete();
             DB::commit();
             $res =
@@ -385,6 +385,7 @@ class RoleManagementController extends Controller
                     'title'   => "حذف نقش",
                     'message' => 'نقش با موفقیت حذف شد.'
                 ];
+
             return $res;
         } catch (\Exception $e)
         {
@@ -400,82 +401,83 @@ class RoleManagementController extends Controller
 
     }
 
-    public function getUserRoleForm (Request $request)
+    public function getUserRoleForm(Request $request)
     {
-        $item_id = $request->item_id ;
-        $user = UserManagement::find(LUM_GetDecodeId($item_id));
-        if(isset( $user->roles))
+        $item_id = $request->item_id;
+        $user = $this->user_model::find(LUM_GetDecodeId($item_id));
+        if (isset($user->roles))
         {
-            $user_roles = $user->roles ;
-            $permission_ids = [] ;
+            $user_roles = $user->roles;
+            $permission_ids = [];
             foreach ($user_roles as $user_perm)
             {
-                $permission_ids[] = $user_perm->id ;
+                $permission_ids[] = $user_perm->id;
             }
         }
         else
         {
-            $permission_ids = [] ;
+            $permission_ids = [];
         }
-        $roles = $this->role_model::all() ;
-        if(count($roles) == count($permission_ids) )
+        $roles = $this->role_model::all();
+        if (count($roles) == count($permission_ids))
         {
             $class = 'fa-check-circle';
-            $status = 2 ;
+            $status = 2;
         }
-        elseif(count($permission_ids) > 0)
+        elseif (count($permission_ids) > 0)
         {
             $class = 'fa-dot-circle';
-            $status = 1 ;
+            $status = 1;
         }
         else
         {
             $class = 'fa-circle';
-            $status = 0 ;
+            $status = 0;
 
         }
-        $item_form = view('laravel_user_management::backend.view.user_role', compact('roles','item_id','permission_ids','user','class','status'))->render();
+        $item_form = view('laravel_user_management::backend.view.user_role', compact('roles', 'item_id', 'permission_ids', 'user', 'class', 'status'))->render();
         $res['success'] = true;
         $res['get_user_role'] = $item_form;
 
         return $res;
     }
 
-    public function getUserTeamForm (Request $request)
+    public function getUserTeamForm(Request $request)
     {
-        $item_id = $request->item_id ;
-        $user = UserManagement::find(LUM_GetDecodeId($item_id));dd($user->roles->toArray());
-        if(isset( $user->teams))
+        $item_id = $request->item_id;
+        $user = $this->user_model::find(LUM_GetDecodeId($item_id));
+        dd($user->roles->toArray());
+        if (isset($user->teams))
         {
-            $user_roles = $user->teams ;
-            $permission_ids = [] ;
+            $user_roles = $user->teams;
+            $permission_ids = [];
             foreach ($user_roles as $user_perm)
             {
-                $permission_ids[] = $user_perm->id ;
+                $permission_ids[] = $user_perm->id;
             }
         }
         else
         {
-            $permission_ids = [] ;
+            $permission_ids = [];
         }
-        $roles = $this->role_model::all() ;
-        if(count($roles) == count($permission_ids) )
+        $roles = $this->role_model::all();
+        if (count($roles) == count($permission_ids))
         {
             $class = 'fa-check-circle';
-            $status = 2 ;
+            $status = 2;
         }
-        elseif(count($permission_ids) > 0)
+        elseif (count($permission_ids) > 0)
         {
             $class = 'fa-dot-circle';
-            $status = 1 ;
+            $status = 1;
         }
         else
         {
             $class = 'fa-circle';
-            $status = 0 ;
+            $status = 0;
 
         }
-        $item_form = view('laravel_user_management::backend.view.user_role', compact('roles','item_id','permission_ids','user','class','status'))->render();
+        $item_form = view('laravel_user_management::backend.view.user_role', compact('roles', 'item_id', 'permission_ids', 'user', 'class', 'status'))->render();
         $res['success'] = true;
         $res['get_user_role'] = $item_form;
 
@@ -487,11 +489,11 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item_id = $request->item_id ;
-            $type = $request->type ;
-            $item_id = LUM_GetDecodeId($request->item_id) ;
+            $item_id = $request->item_id;
+            $type = $request->type;
+            $item_id = LUM_GetDecodeId($request->item_id);
 
-            $user = UserManagement::find($item_id);
+            $user = $this->user_model::find($item_id);
             $user->roles()->sync($request->items);
             $res =
                 [
@@ -525,8 +527,8 @@ class RoleManagementController extends Controller
                 return LUM_GetEncodeId($data->id);
             })
             ->addColumn('username', function ($data) {
-                $user = UserManagement::find($data->user_id) ;
-                if($user)
+                $user = $this->user_model::find($data->user_id);
+                if ($user)
                 {
                     if (isset($user->name))
                     {
@@ -534,12 +536,12 @@ class RoleManagementController extends Controller
                     }
                     else
                     {
-                        return '' ;
+                        return '';
                     }
                 }
                 else
                 {
-                    return '' ;
+                    return '';
                 }
             })
             ->editColumn('created_at', function ($data) {

@@ -1,17 +1,21 @@
 <?php
 
-namespace ArtinCMS\LUM\Controllers;
+namespace App\Http\Controllers\Vendor\LUM;
 
-use ArtinCMS\LUM\Models\UserManagement;
-use ArtinCMS\LUM\Requests\User_Request;
-use Yajra\DataTables\Facades\DataTables;
-use Validator;
+use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use DB;
+use ArtinCMS\LUM\Requests\User_Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class LUM_UserManagementController extends Controller
 {
+    protected $user_model = '';
+
+    public function __construct(array $settings = [])
+    {
+        $this->user_model =config('laravel_user_management.user_model');
+    }
     public function index()
     {
         return view('laravel_user_management::backend.index');
@@ -19,7 +23,7 @@ class LUM_UserManagementController extends Controller
 
     public function getUsers()
     {
-        $users = UserManagement::query();
+        $users = $this->user_model::query();
 
         return Datatables::eloquent($users)
             ->editColumn('id', function ($data) {
@@ -39,7 +43,7 @@ class LUM_UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = UserManagement::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->user_model::find(LUM_GetDecodeId($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_user_form', compact('item'))->render();
             $res['success'] = true;
@@ -64,21 +68,19 @@ class LUM_UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $roles = $this->role_model::find(LUM_GetDecodeId($request->item_id));
-            $roles->name = $request->name;
-            $roles->display_name = $request->display_name;
-            $roles->description = $request->description;
-            if (auth()->check())
-            {
-                $auth = auth()->id();
-            }
-            else
-            {
-                $auth = 0;
-
-            }
-            $roles->created_by = $auth;
-            $roles->save();
+            $user = $this->user_model::find($request->id);
+            $user->username = $request->username;
+            $user->password = bcrypt($request->password);
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->father_name = $request->father_name;
+            $user->mobile = $request->mobile;
+            $user->email = $request->email;
+            $user->address = $request->address;
+            $user->email_confirmed = $request->email_confirmed;
+            $user->mobile_confirmed = $request->mobile_confirmed;
+            $user->user_confirmed = $request->user_confirmed;
+            $user->save();
             $res =
                 [
                     'success' => true,
@@ -103,13 +105,11 @@ class LUM_UserManagementController extends Controller
 
     public function addUsers(User_Request $request)
     {
-        dd($request->all());
         DB::beginTransaction();
         try
         {
-
-            $user = new UserManagement();
-            $user->username = $request->username ;
+            $user = new $this->user_model();
+            $user->username = $request->username;
             $user->password = bcrypt($request->password);
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
@@ -120,7 +120,7 @@ class LUM_UserManagementController extends Controller
             $user->email_confirmed = $request->email_confirmed;
             $user->mobile_confirmed = $request->mobile_confirmed;
             $user->user_confirmed = $request->user_confirmed;
-            $user->save() ;
+            $user->save();
             $res =
                 [
                     'success' => true,
@@ -143,40 +143,4 @@ class LUM_UserManagementController extends Controller
             return json_encode($res);
         }
     }
-
-    public function setUserStatus (Request $request)
-    {
-        DB::beginTransaction();
-        try
-        {
-            $item = UserManagement::find(LUM_GetDecodeId($request->item_id));
-            if ($request->is_active == "true")
-            {
-                $item->user_confirmed = "1";
-                $res['message'] = ' آیتم فعال گردید';
-            }
-            else
-            {
-                $item->user_confirmed = "0";
-                $res['message'] = 'آیتم غیر فعال شد';
-            }
-            $item->save();
-            $res['success'] = true;
-            $res['title'] = 'وضعیت آیتم تغییر پیدا کرد .';
-            DB::commit();
-
-            return $res;
-        } catch (\Exception $e)
-        {
-            DB::rollback();
-            $res =
-                [
-                    'success' => false,
-                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
-                ];
-
-            return json_encode($res);
-        };
-    }
-
 }
