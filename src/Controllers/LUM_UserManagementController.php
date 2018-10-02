@@ -144,4 +144,39 @@ class LUM_UserManagementController extends Controller
         }
     }
 
+    public function setUserStatus (Request $request)
+    {
+        DB::beginTransaction();
+        try
+        {
+            $item = UserManagement::find(LUM_GetDecodeId($request->item_id));
+            if ($request->is_active == "true")
+            {
+                $item->user_confirmed = "1";
+                $res['message'] = ' آیتم فعال گردید';
+            }
+            else
+            {
+                $item->user_confirmed = "0";
+                $res['message'] = 'آیتم غیر فعال شد';
+            }
+            $item->save();
+            $res['success'] = true;
+            $res['title'] = 'وضعیت آیتم تغییر پیدا کرد .';
+            DB::commit();
+
+            return $res;
+        } catch (\Exception $e)
+        {
+            DB::rollback();
+            $res =
+                [
+                    'success' => false,
+                    'message' => [['title' => 'خطا درثبت اطلاعات:', 'items' => ['در ثبت اطلاات خطا روی داده است لطفا دوباره سعی کنید', 'درصورت تکرار این خطا لطفا با مدیریت تماس حاصل فرمایید.']]]
+                ];
+
+            return json_encode($res);
+        };
+    }
+
 }

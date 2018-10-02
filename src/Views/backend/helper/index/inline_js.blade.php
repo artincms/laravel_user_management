@@ -110,9 +110,6 @@
                     '</span>' +
                     '  <div class="dropdown_gallery hidden">' +
                     '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
-                    '       <i class="fa fa-reply"></i><span class="ml-2">افزودن تم ها</span>' +
-                    '   </a>' +
-                    '   <a class="btn_role_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
                     '       <i class="fa fa-reply"></i><span class="ml-2">افزودن نقش ها</span>' +
                     '   </a>' +
                     '   <a class="btn_permission_to_user pointer gallery_menu-item" data-item_id="' + full.id + '" data-title="' + full.username + '">' +
@@ -141,10 +138,9 @@
 
     function change_status_user(input) {
         var $this = $(input);
-        var user_id = $this.data('item_id');
+        var item_id = $this.data('item_id');
         var checked = input.checked ;
-        var item_id = input.id ;
-        var parameters = {user_id: user_id, status: checked,item_id:item_id};
+        var parameters = {status: checked,item_id:item_id};
         yesNoAlert('تغییر وضعیت کاربر', 'از تغییر وضعیت کاربر مطمئن هستید ؟', 'warning', 'بله، وضعیت کاربر را تغییر بده!', 'لغو', set_user_status, parameters,remove_checked,parameters);
     }
 
@@ -156,20 +152,20 @@
             data: params,
             success: function (result) {
             if (result.success) {
-                swal({
-                    position: 'top-end',
-                    type: 'success',
-                    title: result.title,
-                    text : result.message ,
-                    showConfirmButton: true,
-                })
+                menotify('success', result.title, result.message);
             }
+            else
+            {
+                Messages(data.message, 'form_message_box', 'error', formElement);
+                showErrors(formElement, data.errors);
+            }
+
         }
     });
     }
 
     function remove_checked (params) {
-        var $this =$('#'+params.item_id) ;
+        var $this =$('#change_user_status_'+params.item_id) ;
         if(params.status)
         {
             $this.prop('checked', false);
@@ -186,7 +182,7 @@
         var checked = input.checked ;
         var item_id = input.id ;
         var parameters = {user_id: user_id, status: checked,item_id:item_id};
-        yesNoAlert(' تغییر وضعیت', 'از تغییر وضعیت تایید ایمیل مطمئن هستید ؟', 'warning', 'بله، وضعیت ایمیل  را تغییر بده!', 'لغو', set_email_status, parameters,remove_checked,parameters);
+        yesNoAlert(' تغییر وضعیت', 'از تغییر وضعیت تایید ایمیل مطمئن هستید ؟', 'warning', 'بله، وضعیت ایمیل  را تغییر بده!', 'لغو', set_email_status, parameters,remove_checked_email,parameters);
     }
     function set_email_status(params) {
         $.ajax({
