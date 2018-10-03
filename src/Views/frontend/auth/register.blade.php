@@ -1,6 +1,8 @@
 @extends('laravel_user_management::layouts.frontend_master')
 
 @section('content')
+    <div class="show_activation_message alert alert-success hidden"></div>
+    <div id="form_message_box"></div>
     <div class="show_register_form">
         <form  id="frm_user_register" class="form-horizontal" name="frm_user_register">
             <div class="panel panel-body login-form">
@@ -25,6 +27,14 @@
                     </div>
                     <span class="help-block text-danger messages"></span>
                 </div>
+                <div class="form-group has-feedback has-feedback-left">
+                    <input type="password" class="form-control" name="password_confirmation" placeholder="تایید گذرواژه">
+                    <div class="form-control-feedback">
+                        <i class="icon-user-lock text-muted"></i>
+                    </div>
+                    <span class="help-block text-danger messages"></span>
+                </div>
+
 
                 {{--<div class="content-divider text-muted form-group"><span>اطلاعات شخصی</span></div>--}}
 
@@ -40,9 +50,10 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" class="styled">
+                            <input type="checkbox" class="styled" name="rules">
                             قبول <a href="{{$term_url}}">قوانین </a>سایت
                         </label>
+                        <span class="help-block text-danger messages"></span>
                     </div>
                 </div>
 

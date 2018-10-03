@@ -14,6 +14,7 @@
     @yield('custom_plugin_style')
     <script type="text/javascript" src="{{asset('vendor/laravel_user_management/frontend/js/build/init_core.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('vendor/laravel_user_management/frontend/js/build/init_function.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('vendor/laravel_user_management/frontend/js/init_validatejs.js')}}"></script>
     @yield('custom_plugin_js')
 <!-- /theme JS files -->
     @yield('inline_style')

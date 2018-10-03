@@ -18,3 +18,7 @@
     padding: 20px;
     display: inline-block;
 }
+#form_message_box li {
+    color: red;
+    list-style: none;
+}

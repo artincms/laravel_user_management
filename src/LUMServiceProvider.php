@@ -5,6 +5,7 @@ namespace ArtinCMS\LUM;
 use ArtinCMS\LUM\Commands\PublishCommand;
 use ArtinCMS\LUM\Commands\SetupCommand;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class LUMServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,48 @@ class LUMServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        Validator::extendImplicit('valid_username', function ($attribute, $value, $parameters, $validator) {
+            if(preg_match('/^[a-z]+$/',$value[0]))
+            {
+                if(strlen($value)>4)
+                {
+                    if(strlen($value)<20)
+                    {
+                        if(preg_match('/^[a-z0-9._]+$/',$value[0]))
+                        {
+                            if(strpos($value, '__'))
+                            {
+                                return false ;
+                            }
+                            else
+                            {
+                                return true ;
+                            }
+                        }
+                        else
+                        {
+                            return false ;
+                        }
+
+                    }
+                    else
+                    {
+                        return false ;
+                    }
+
+                }
+                else
+                {
+                    return false ;
+                }
+
+            }
+            else
+            {
+                return false ;
+            }
+            return true ;
+        });
     	// the main router
         $this->loadRoutesFrom( __DIR__.'/Routes/backend_lum_route.php');
         $this->loadRoutesFrom( __DIR__.'/Routes/frontend_lum_route.php');

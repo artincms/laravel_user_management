@@ -388,8 +388,16 @@ if (!function_exists('LUM_generateEmailRandomKey'))
 {
     function LUM_generateEmailRandomKey()
     {
-        $random_key = md5(rand(1000, 50000));
-
+        $random_key = md5(rand(1000, 50000).date('Y-m-d H:i:s'));
+        $find = config('laravel_user_management.user_model') ::where('email_confirmation_code',$random_key)->first();
+        if($find)
+        {
+            LUM_generateEmailRandomKey() ;
+        }
+        else
+        {
+            return $random_key;
+        }
         return $random_key;
     }
 }
@@ -422,6 +430,32 @@ if (!function_exists('validation_error_to_api_json'))
         }
 
         return $api_errors;
+    }
+}
+if (!function_exists('LUM_nextDate'))
+{
+    function LUM_nextDate($key)
+    {
+        $date = date('Y-m-d H:i:s');
+        $currentDate = strtotime($date);
+        $futureDate = $currentDate+($key);
+        $formatDate = date("Y-m-d H:i:s", $futureDate);
+        return $formatDate ;
+    }
+}
+
+//LUM_activationUrl return 3 url
+//1    successed  --->when activation successed
+//2    failed    --->when activation failed
+//3    expired   ----->when activation code expired
+if (!function_exists('LUM_activationUrl'))
+{
+    function LUM_activationUrl()
+    {
+        $route['failed'] = route('LUM.Activation.failedActivation');
+        $route['successed'] = route('LUM.Activation.successedActivation');
+        $route['expired'] = route('LUM.Activation.expiredActivation');
+        return $route ;
     }
 }
 ?>

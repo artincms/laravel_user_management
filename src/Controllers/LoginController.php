@@ -4,8 +4,6 @@ namespace ArtinCMS\LUM\Controllers;
 
 //namespace App\Http\Controllers\Vendor\LUM;
 
-use App\Permission;
-use ArtinCMS\LUM\Models\PermissionCategoryManagement;
 use DB;
 use Illuminate\Support\Facades\Mail;
 use Validator;
@@ -13,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use ArtinCMS\LUM\Mail\NewUserValidation;
 
-class RegisterController extends Controller
+class LoginController extends Controller
 {
     protected $user_model = '';
 
@@ -24,40 +22,20 @@ class RegisterController extends Controller
 
     public function index()
     {
-        $permissions = PermissionCategoryManagement::where('id','>',0)->get();
-        foreach ($permissions as $permission)
-        {        $permission->delete();
-
-        }
-dd(1);
-        $term_url = config('laravel_user_management.accept_term_url');
-
-        return view('laravel_user_management::frontend.auth.register', compact('term_url'));
+        return view('laravel_user_management::frontend.auth.login', compact('term_url'));
     }
 
-    public function addRegister(Request $request)
+    public function addLogin(Request $request)
     {
         $rules = [
-            'email'                 => 'required|email||unique:lum_users,email,NULL,id,deleted_at,NULL',
-            'username'              => 'required|min:5|max:20|unique:lum_users,username,NULL,id,deleted_at,NULL|valid_username',
-            'password'              => 'required|confirmed|min:6',
-            'password_confirmation' => 'required|min:6',
+            'username'              => 'required',
+            'password'              => 'required|min:6',
         ];
         $validator = Validator::make($request->all(), $rules, [
-            'email.required'                 => 'وارد کردن ایمیل الزامی است.',
-            'email.email'                    => 'ایمیل وارد شده معتبر نمی باشد.',
-            'email.unique'                   => 'ایمیل وارد شده قبلا در سامانه ثبت شده است.',
+
             'username.required'              => 'وارد کردن نام کاربری الزامی است.',
-            'username.min'                   => 'نام کاربری نمی‌تواند کمتر از 5 کاراکتر باشد.',
-            'username.valid_username'        => 'نام کاربری معتبر نمیباشد .',
-            'username.max'                   => 'نام کاربری نمی‌تواند بیشتر از 20 کاراکتر باشد.',
-            'username.unique'                => 'نام کاربری وارد شده قبلا در سامانه ثبت شده است.',
-            'username.regex'                 => 'نام کاربری فقط باید شامل حروف انگلیسی کوچک و اعداد و نقطه آندرلاین باشد .',
             'password.required'              => 'وارد کردن رمزعبور الزامی است.',
-            'password.confirmed'             => 'تکرار رمز عبور با رمز عبور وارد شده یکسان نیست.',
             'password.min'                   => 'کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
-            'password_confirmation.required' => 'وارد کردن تکرار کلمه عبور الزامی است.',
-            'password_confirmation.min'      => 'تکرار کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
         ]);
         if ($validator->fails())
         {

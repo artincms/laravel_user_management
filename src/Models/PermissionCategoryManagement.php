@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PermissionCategoryManagement extends Model
 {
     use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'lum_permission_categories';
 
     public function parent()
