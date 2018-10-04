@@ -24,12 +24,11 @@ class RegisterController extends Controller
 
     public function index()
     {
-        $permissions = PermissionCategoryManagement::where('id','>',0)->get();
-        foreach ($permissions as $permission)
-        {        $permission->delete();
-
-        }
-dd(1);
+//        $permissions = PermissionCategoryManagement::where('id','>',0)->get();
+//        foreach ($permissions as $permission)
+//        {        $permission->delete();
+//
+//        }
         $term_url = config('laravel_user_management.accept_term_url');
 
         return view('laravel_user_management::frontend.auth.register', compact('term_url'));

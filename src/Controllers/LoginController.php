@@ -161,7 +161,6 @@ class LoginController extends Controller
 
                 return redirect($redirect['failed']);
             }
-            dd($user->toArray());
         }
         else
         {
