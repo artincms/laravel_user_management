@@ -10,8 +10,8 @@ return [
 
     //-----------------FOR EXTERNAL USER CONTROLLER
     'have_external_controller'            => env('HAVE_EXTERNAL_CONTROLLER', false),
-    'user_controller_name'                => env('USER_CONTROLLER_NAME', 'UserManagement'),
-    'external_user_controller_name_space' => env('EXTERNAL_USER_CONTROLLER_NAME_SPACE', 'ArtinCMS\LUM\Controllers'),
+    'user_controller_name'                => env('USER_CONTROLLER_NAME', 'UserManagementController'),
+    'user_controller_name_space'          => env('USER_CONTROLLER_NAME_SPACE', 'ArtinCMS\LUM\Controllers'),
 
     //------------------Auth Config
     'register_model'                      => env('LUM_REGISTER_DATA', 'ArtinCMS\LUM\Controllers'),

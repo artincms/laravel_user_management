@@ -4,12 +4,12 @@ namespace ArtinCMS\LUM\Controllers;
 
 //namespace App\Http\Controllers\Vendor\LUM;
 
-use ArtinCMS\LUM\Requests\User_Edit_Request;
 use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use ArtinCMS\LUM\Requests\User_Request;
 use Yajra\DataTables\Facades\DataTables;
+use ArtinCMS\LUM\Requests\User_Request;
+use ArtinCMS\LUM\Requests\User_Edit_Request;
 
 class UserManagementController extends Controller
 {

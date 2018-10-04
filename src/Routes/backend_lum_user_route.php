@@ -1,14 +1,14 @@
 <?php
-Route::group(['prefix' => config('laravel_user_management.backend_lum_route_prefix'), 'namespace' =>  'ArtinCMS\LUM\Controllers', 'middleware' => config('laravel_user_management.backend_lum_middlewares')], function () {
+Route::group(['prefix' => config('laravel_user_management.backend_lum_route_prefix'), 'namespace' => config('laravel_user_management.external_user_controller_name_space'), 'middleware' => config('laravel_user_management.backend_lum_middlewares')], function () {
     Route::group(['prefix' => 'Users'], function () {
-        Route::get('index', ['as' => 'LUM.Users.index', 'uses' => 'UserManagementController@index']);
-        Route::post('getUsers', ['as' => 'LUM.Users.getUsers', 'uses' => 'UserManagementController@getUsers']);
-        Route::post('getEditUserForm', ['as' => 'LUM.Users.getEditUserForm', 'uses' => 'UserManagementController@getEditUserForm']);
-        Route::post('setUserStatus', ['as' => 'LUM.Users.setUserStatus', 'uses' => 'UserManagementController@setUserStatus']);
-        Route::post('setEmailStatus', ['as' => 'LUM.Users.setEmailStatus', 'uses' => 'UserManagementController@setEmailStatus']);
-        Route::post('setMobileStatus', ['as' => 'LUM.Users.setMobileStatus', 'uses' => 'UserManagementController@setMobileStatus']);
-        Route::post('trashUser', ['as' => 'LUM.Users.trashUser', 'uses' => 'UserManagementController@trashUser']);
-        Route::post('addUsers', ['as' => 'LUM.Users.addUsers', 'uses' => 'UserManagementController@addUsers']);
-        Route::post('editUser', ['as' => 'LUM.Users.editUser', 'uses' => 'UserManagementController@editUser']);
+        Route::get('index', ['as' => 'LUM.Users.index', 'uses' => config('laravel_user_management.user_controller_name') . '@index']);
+        Route::post('getUsers', ['as' => 'LUM.Users.getUsers', 'uses' => config('laravel_user_management.user_controller_name') . '@getUsers']);
+        Route::post('getEditUserForm', ['as' => 'LUM.Users.getEditUserForm', 'uses' => config('laravel_user_management.user_controller_name') . '@getEditUserForm']);
+        Route::post('setUserStatus', ['as' => 'LUM.Users.setUserStatus', 'uses' => config('laravel_user_management.user_controller_name') . '@setUserStatus']);
+        Route::post('setEmailStatus', ['as' => 'LUM.Users.setEmailStatus', 'uses' => config('laravel_user_management.user_controller_name') . '@setEmailStatus']);
+        Route::post('setMobileStatus', ['as' => 'LUM.Users.setMobileStatus', 'uses' => config('laravel_user_management.user_controller_name') . '@setMobileStatus']);
+        Route::post('trashUser', ['as' => 'LUM.Users.trashUser', 'uses' => config('laravel_user_management.user_controller_name') . '@trashUser']);
+        Route::post('addUsers', ['as' => 'LUM.Users.addUsers', 'uses' => config('laravel_user_management.user_controller_name') . '@addUsers']);
+        Route::post('editUser', ['as' => 'LUM.Users.editUser', 'uses' => config('laravel_user_management.user_controller_name') . '@editUser']);
     });
 });
