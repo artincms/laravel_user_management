@@ -2,8 +2,8 @@
 
 return [
     /* Important Settings */
-    'backend_lum_middlewares'             => env('BACKEND_LUM_MIDDLEWARES', 'web'),
-    'frontend_lum_middlewares'            => env('FRONTEND_LUM_MIDDLEWARES', 'web'),
+    'backend_lum_middlewares'             => explode(',', env('BACKEND_LUM_MIDDLEWARES', 'web')),
+    'frontend_lum_middlewares'            => explode(',', env('FRONTEND_LUM_MIDDLEWARES', 'web')),
     'backend_lum_route_prefix'            => env('BACKEND_LUM_ROUTE_PERFIX', 'LUM'),
     'frontend_lum_route_prefix'           => env('FRONTEND_LUM_ROUTE_PERFIX', 'LUM'),
     'user_model'                          => env('LUM_USER_MODEL', 'ArtinCMS\LUM\Models\UserManagement'),
@@ -19,7 +19,7 @@ return [
     'the_email_must_be_checked'           => env('THE_EMAIL_MUST_BE_CHECKED', true),
     'expire_date'                         => env('EXPIRE_DATE', 300),
 
-    'activation_url_redirect_func_name' => env('ACTIVATION_URL_REDIRECT_FUNC_NAME', 'LUM_activationUrl'),
+    'activation_url_redirect_func_name' => env('ACTIVATION_URL_REDIRECT_FUNC_NAME', 'LUM_activation_url'),
 
 
 ];

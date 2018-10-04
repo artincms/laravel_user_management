@@ -47,7 +47,7 @@ class PermissionManagementController extends Controller
                 return LUM_GetEncodeId($data->id);
             })
             ->addColumn('created_at', function ($data) {
-                return LUM_Date_GtoJ($data->created_at);
+                return LUM_date_g_to_j($data->created_at);
             })
             ->make(true);
     }
@@ -99,7 +99,7 @@ class PermissionManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = PermissionCategoryManagement::find(LUM_GetDecodeId($request->item_id));
+            $item = PermissionCategoryManagement::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->is_active = "1";
@@ -132,7 +132,7 @@ class PermissionManagementController extends Controller
     public function getEditPermissionCategorysForm(Request $request)
     {
 
-            $item = PermissionCategoryManagement::with('parent')->find(LUM_GetDecodeId($request->item_id));
+            $item = PermissionCategoryManagement::with('parent')->find(LUM_get_decode_id($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_permission_category_form', compact('item'))->render();
             $res['success'] = true;
@@ -146,7 +146,7 @@ class PermissionManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $permissions = PermissionCategoryManagement::find(LUM_GetDecodeId($request->item_id));
+            $permissions = PermissionCategoryManagement::find(LUM_get_decode_id($request->item_id));
             $permissions->title = $request->title;
             $permissions->parent_id = $request->parent_id;
             $permissions->description = $request->description;
@@ -188,7 +188,7 @@ class PermissionManagementController extends Controller
 //        DB::beginTransaction();
 //        try
 //        {
-            $item = PermissionCategoryManagement::with('childItems','Children')->find(LUM_GetDecodeId($request->item_id));
+            $item = PermissionCategoryManagement::with('childItems','Children')->find(LUM_get_decode_id($request->item_id));
             $item->delete();
             if ($item->childItems)
             {
@@ -238,14 +238,14 @@ class PermissionManagementController extends Controller
     //--------------------------permission function -----------------------------------------------------------//
     public function getPermissions(Request $request)
     {
-        $permissions = $this->permission_model::where('category_id',LUM_GetDecodeId($request->item_id));
+        $permissions = $this->permission_model::where('category_id',LUM_get_decode_id($request->item_id));
 
         return Datatables::eloquent($permissions)
             ->editColumn('id', function ($data) {
                 return LUM_GetEncodeId($data->id);
             })
             ->addColumn('created_at', function ($data) {
-                return LUM_Date_GtoJ($data->created_at);
+                return LUM_date_g_to_j($data->created_at);
             })
             ->make(true);
     }
@@ -259,7 +259,7 @@ class PermissionManagementController extends Controller
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -276,7 +276,7 @@ class PermissionManagementController extends Controller
             {
                 $permissions = new $this->permission_model;
                 $permissions->name = $request->name;
-                $permissions->category_id =LUM_GetDecodeId($request->category_id);
+                $permissions->category_id =LUM_get_decode_id($request->category_id);
                 $permissions->display_name = $request->display_name;
                 $permissions->description = $request->description;
                 if (auth()->check())
@@ -318,7 +318,7 @@ class PermissionManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->permission_model::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->is_active = "1";
@@ -353,7 +353,7 @@ class PermissionManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->permission_model::find(LUM_get_decode_id($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
             $item->category_encode_id = LUM_GetEncodeId($item->category_id);
             $item_form = view('laravel_user_management::backend.view.edit_permission_form', compact('item'))->render();
@@ -378,14 +378,14 @@ class PermissionManagementController extends Controller
     public function editPermissions(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:'.config('laratrust.tables.permissions').',name,'.LUM_GetDecodeId($request->item_id).',id,deleted_at,NULL',
+            'name' => 'required|unique:'.config('laratrust.tables.permissions').',name,'.LUM_get_decode_id($request->item_id).',id,deleted_at,NULL',
         ],[
             'name.unique'=>'نام تکراری است .',
             'name.required'=>'نام الزامی است .',
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -400,7 +400,7 @@ class PermissionManagementController extends Controller
             DB::beginTransaction();
             try
             {
-                $permissions = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
+                $permissions = $this->permission_model::find(LUM_get_decode_id($request->item_id));
                 $permissions->name = $request->name;
                 $permissions->display_name = $request->display_name;
                 $permissions->description = $request->description;
@@ -444,7 +444,7 @@ class PermissionManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $gallery = $this->permission_model::find(LUM_GetDecodeId($request->item_id));
+            $gallery = $this->permission_model::find(LUM_get_decode_id($request->item_id));
             $gallery->delete();
             DB::commit();
             $res =
@@ -475,7 +475,7 @@ class PermissionManagementController extends Controller
         {
             $item_id = $request->item_id ;
             $type = $request->type ;
-            $item_id = LUM_GetDecodeId($request->item_id) ;
+            $item_id = LUM_get_decode_id($request->item_id) ;
             $type = $request->type ;
             if($type == 2)
             {
@@ -522,7 +522,7 @@ class PermissionManagementController extends Controller
         $item_id = $request->item_id ;
         if($type == 1)
         {
-            $user = UserManagement::find(LUM_GetDecodeId($item_id));
+            $user = UserManagement::find(LUM_get_decode_id($item_id));
             if(isset( $user->permissions))
             {
                 $user_permissions = $user->permissions ;
@@ -539,7 +539,7 @@ class PermissionManagementController extends Controller
         }
         else
         {
-            $role = $this->role_model::find(LUM_GetDecodeId($item_id));
+            $role = $this->role_model::find(LUM_get_decode_id($item_id));
             if(isset( $role->permissions))
             {
                 $role_permissions = $role->permissions ;

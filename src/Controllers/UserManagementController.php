@@ -37,7 +37,7 @@ class UserManagementController extends Controller
                 return $data->id;
             })
             ->addColumn('created_at', function ($data) {
-                return LUM_Date_GtoJ($data->created_at);
+                return LUM_date_g_to_j($data->created_at);
             })
             ->make(true);
     }
@@ -47,7 +47,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->user_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->user_model::find(LUM_get_decode_id($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_user_form', compact('item'))->render();
             $res['success'] = true;
@@ -72,7 +72,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $user = $this->user_model::find(LUM_GetDecodeId($request->item_id));
+            $user = $this->user_model::find(LUM_get_decode_id($request->item_id));
             $user->username = $request->username;
             if ($request->password)
             {
@@ -156,7 +156,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->user_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->user_model::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->user_confirmed = "1";
@@ -191,7 +191,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->user_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->user_model::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->email_confirmed = "1";
@@ -226,7 +226,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->user_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->user_model::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->mobile_confirmed = "1";
@@ -261,7 +261,7 @@ class UserManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $user = $this->user_model::find(LUM_GetDecodeId($request->item_id));
+            $user = $this->user_model::find(LUM_get_decode_id($request->item_id));
             $user->delete();
             DB::commit();
             $res =

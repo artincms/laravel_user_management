@@ -42,7 +42,7 @@ class User_Request extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        $api_errors = validation_error_to_api_json($validator->errors());
+        $api_errors = LUM_validation_error_to_api_json($validator->errors());
         if ($validator->errors()->first('register_captcha_code'))
         {
             $res =

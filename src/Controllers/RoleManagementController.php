@@ -34,7 +34,7 @@ class RoleManagementController extends Controller
                 return LUM_GetEncodeId($data->id);
             })
             ->addColumn('created_at', function ($data) {
-                return LUM_Date_GtoJ($data->created_at);
+                return LUM_date_g_to_j($data->created_at);
             })
             ->make(true);
     }
@@ -48,7 +48,7 @@ class RoleManagementController extends Controller
                 return LUM_GetEncodeId($data->id);
             })
             ->addColumn('created_at', function ($data) {
-                return LUM_Date_GtoJ($data->created_at);
+                return LUM_date_g_to_j($data->created_at);
             })
             ->make(true);
     }
@@ -63,7 +63,7 @@ class RoleManagementController extends Controller
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -163,7 +163,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->role_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->role_model::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->is_active = "1";
@@ -198,7 +198,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->team_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->team_model::find(LUM_get_decode_id($request->item_id));
             if ($request->is_active == "true")
             {
                 $item->is_active = "1";
@@ -233,7 +233,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->role_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->role_model::find(LUM_get_decode_id($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_role_form', compact('item'))->render();
             DB::commit();
@@ -259,7 +259,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $item = $this->team_model::find(LUM_GetDecodeId($request->item_id));
+            $item = $this->team_model::find(LUM_get_decode_id($request->item_id));
             $item->encode_id = LUM_GetEncodeId($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_team_form', compact('item'))->render();
             DB::commit();
@@ -283,14 +283,14 @@ class RoleManagementController extends Controller
     public function editRoles(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:'.config('laratrust.tables.roles').',name,'.LUM_GetDecodeId($request->item_id).',id,deleted_at,NULL',
+            'name' => 'required|unique:'.config('laratrust.tables.roles').',name,'.LUM_get_decode_id($request->item_id).',id,deleted_at,NULL',
         ],[
             'name.unique'=>'نام تکراری است .',
             'name.required'=>'نام الزامی است .',
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -305,7 +305,7 @@ class RoleManagementController extends Controller
             DB::beginTransaction();
             try
             {
-                $roles = $this->role_model::find(LUM_GetDecodeId($request->item_id));
+                $roles = $this->role_model::find(LUM_get_decode_id($request->item_id));
                 $roles->name = $request->name;
                 $roles->display_name = $request->display_name;
                 $roles->description = $request->description;
@@ -348,7 +348,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $roles = $this->team_model::find(LUM_GetDecodeId($request->item_id));
+            $roles = $this->team_model::find(LUM_get_decode_id($request->item_id));
             $roles->name = $request->name;
             $roles->display_name = $request->display_name;
             $roles->description = $request->description;
@@ -390,7 +390,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $role = $this->role_model::find(LUM_GetDecodeId($request->item_id));
+            $role = $this->role_model::find(LUM_get_decode_id($request->item_id));
             $role->delete();
             DB::commit();
             $res =
@@ -420,7 +420,7 @@ class RoleManagementController extends Controller
         DB::beginTransaction();
         try
         {
-            $role = $this->team_model::find(LUM_GetDecodeId($request->item_id));
+            $role = $this->team_model::find(LUM_get_decode_id($request->item_id));
             $role->delete();
             DB::commit();
             $res =
@@ -448,7 +448,7 @@ class RoleManagementController extends Controller
     public function getUserRoleForm(Request $request)
     {
         $item_id = $request->item_id;
-        $user = $this->user_model::find(LUM_GetDecodeId($item_id));
+        $user = $this->user_model::find(LUM_get_decode_id($item_id));
         if (isset($user->roles))
         {
             $user_roles = $user->roles;
@@ -489,7 +489,7 @@ class RoleManagementController extends Controller
     public function getUserTeamForm(Request $request)
     {
         $item_id = $request->item_id;
-        $user = $this->user_model::find(LUM_GetDecodeId($item_id));
+        $user = $this->user_model::find(LUM_get_decode_id($item_id));
         dd($user->roles->toArray());
         if (isset($user->teams))
         {
@@ -535,7 +535,7 @@ class RoleManagementController extends Controller
         {
             $item_id = $request->item_id;
             $type = $request->type;
-            $item_id = LUM_GetDecodeId($request->item_id);
+            $item_id = LUM_get_decode_id($request->item_id);
 
             $user = $this->user_model::find($item_id);
             $user->roles()->sync($request->items);
@@ -589,7 +589,7 @@ class RoleManagementController extends Controller
                 }
             })
             ->editColumn('created_at', function ($data) {
-                return LUM_Date_GtoJ($data->created_at);
+                return LUM_date_g_to_j($data->created_at);
             })
             ->make(true);
     }
