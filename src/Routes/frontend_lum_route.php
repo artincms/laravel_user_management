@@ -4,7 +4,15 @@ Route::group(['prefix' => config('laravel_user_management.frontend_lum_route_pre
     //login form
     Route::group(['prefix' => 'Login'], function () {
         Route::get('index', ['as' => 'LUM.Login.index', 'uses' => 'LoginController@index']);
-        Route::post('addLogin', ['as' => 'LUM.Login.addLogin', 'uses' => 'LoginController@addLogin']);
+        Route::post('userLogin', ['as' => 'LUM.Login.addLogin', 'uses' => 'LoginController@userLogin']);
+
+    });
+
+    Route::group(['prefix' => 'Recovery'], function () {
+        Route::get('email/{message?}', ['as' => 'LUM.Recovery.email', 'uses' => 'ResetPasswordController@emailRecovery']);
+        Route::get('reset/{token}', ['as' => 'LUM.Recovery.reset', 'uses' => 'ResetPasswordController@resetForm']);
+        Route::post('storeRecoveryEmail', ['as' => 'LUM.Recovery.storeRecoveryEmail', 'uses' => 'ResetPasswordController@storeRecoveryEmail']);
+        Route::post('storeRecoveryPassword', ['as' => 'LUM.Recovery.storeRecoveryPassword', 'uses' => 'ResetPasswordController@storeRecoveryPassword']);
 
     });
 

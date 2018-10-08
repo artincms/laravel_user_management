@@ -3,7 +3,6 @@
     var login_users_constraints = {
         username: {
             presence: {message: '^<strong>نام کاربری ضروری است.</strong>'},
-            checkUsername: {message: '^<strong>کدملی وارد شده معتبر نمی باشد.</strong>'},
         },
         password: {
             presence: {message: '^<strong>وارد کردن رمزعبور الزامی است.</strong>'},
@@ -25,10 +24,11 @@
                 $('#frm_user_login .total_loader').remove();
                 if (data.success) {
                     $('#form_message_box').addClass('hidden');
-                    $('.show_activation_message').removeClass('hidden').html('حساب کاربری شما ساخته شد . لطفا برای فعال سازی حساب کاربری از طریق ایمیل اقدام نمایید .');
+                    document.location = data.href
                 }
                 else {
                     $('.show_activation_message').addClass('hidden');
+                    $('#login_form_id .total_loader').remove();
                     showErrors(formElement, data.errors);
                 }
             }

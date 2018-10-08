@@ -366,7 +366,7 @@ if (!function_exists('LUM_CreateLogLogin'))
             $permissions = $user->permissions->toArray();
             $access = array_merge($roles, $permissions);
             $log = new \ArtinCMS\LUM\Models\LogManagement();
-            $log->ip = $request->ip;
+            $log->ip = $request->ip();
             $log->user_id = $user_id;
             $log->access_json = json_encode($access);
             $log->save();
