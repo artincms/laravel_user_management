@@ -25,8 +25,8 @@
                     <span class="help-block text-danger messages"></span>
                 </div>
                 <button type="submit" class="btn bg-teal btn-block btn-lg"><i class="icon-circle-left2 position-right"></i><span style="margin-right: 5px;">ورود</span></button>
-                <a  class="btn bg-teal btn-block btn-lg"><i class="icon-circle-left2 position-right"></i><span style="margin-right: 5px;">ثبت نام</span></a>
-                <a class="btn bg-teal btn-block btn-lg"><i class="icon-circle-left2 position-right"></i><span style="margin-right: 5px;">فراموشی رمز عبور</span></a>
+                <a href="{{route('LUM.register')}}" class="btn bg-green-400 btn-block btn-lg"><i class="icon-circle-left2 position-right"></i><span style="margin-right: 5px;">ثبت نام</span></a>
+                <a href="{{route('LUM.Recovery.email')}}" class="btn bg-orange-400 btn-block btn-lg"><i class="icon-circle-left2 position-right"></i><span style="margin-right: 5px;">فراموشی رمز عبور</span></a>
             </div>
         </form>
     </div>
