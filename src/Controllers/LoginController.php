@@ -41,6 +41,7 @@ class LoginController extends Controller
         if ($validator->fails())
         {
             $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -123,8 +124,8 @@ class LoginController extends Controller
                 }
                 else
                 {
-                    $email_confirmation_code = LUM_generateEmailRandomKey();
-                    $expireDate = LUM_nextDate(config('laravel_user_management.expire_date'));
+                    $email_confirmation_code = LUM_generate_email_random_key();
+                    $expireDate = LUM_next_date(config('laravel_user_management.expire_date'));
                     $user->email_confirmation_code = $email_confirmation_code;
                     $user->email_confirmation_code_expire_at = $expireDate;
                     $user->save();

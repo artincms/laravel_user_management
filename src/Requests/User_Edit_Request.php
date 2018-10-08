@@ -30,9 +30,9 @@ class User_Edit_Request extends FormRequest
                 // Person
                 'first_name'            => 'required|min:2|max:60',
                 'last_name'             => 'required|min:2|max:60',
-//                'mobile'                => 'required|mobile||unique:lum_users,mobile,'.LUM_GetDecodeId($this->request->get('item_id')).',id,deleted_at,NULL',
-                'email'                 => 'required|email||unique:lum_users,email,'.LUM_GetDecodeId($this->request->get('item_id')).',id,deleted_at,NULL',
-                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,'.LUM_GetDecodeId($this->request->get('item_id')).',id,deleted_at,NULL',
+//                'mobile'                => 'required|mobile||unique:lum_users,mobile,'.LUM_get_decode_id($this->request->get('item_id')).',id,deleted_at,NULL',
+                'email'                 => 'required|email||unique:lum_users,email,'.LUM_get_decode_id($this->request->get('item_id')).',id,deleted_at,NULL',
+                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,'.LUM_get_decode_id($this->request->get('item_id')).',id,deleted_at,NULL',
 
             ];
         if($this->request->get('password')  || $this->request->get('confirm_password'))
@@ -54,7 +54,7 @@ class User_Edit_Request extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        $api_errors = validation_error_to_api_json($validator->errors());
+        $api_errors = LUM_validation_error_to_api_json($validator->errors());
         if ($validator->errors()->first('register_captcha_code'))
         {
             $res =
