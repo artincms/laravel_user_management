@@ -31,7 +31,7 @@ class RoleManagementController extends Controller
 
         return Datatables::eloquent($roles)
             ->editColumn('id', function ($data) {
-                return LUM_GetEncodeId($data->id);
+                return LUM_get_encode_id($data->id);
             })
             ->addColumn('created_at', function ($data) {
                 return LUM_date_g_to_j($data->created_at);
@@ -45,7 +45,7 @@ class RoleManagementController extends Controller
 
         return Datatables::eloquent($roles)
             ->editColumn('id', function ($data) {
-                return LUM_GetEncodeId($data->id);
+                return LUM_get_encode_id($data->id);
             })
             ->addColumn('created_at', function ($data) {
                 return LUM_date_g_to_j($data->created_at);
@@ -234,7 +234,7 @@ class RoleManagementController extends Controller
         try
         {
             $item = $this->role_model::find(LUM_get_decode_id($request->item_id));
-            $item->encode_id = LUM_GetEncodeId($item->id);
+            $item->encode_id = LUM_get_encode_id($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_role_form', compact('item'))->render();
             DB::commit();
             $res['success'] = true;
@@ -260,7 +260,7 @@ class RoleManagementController extends Controller
         try
         {
             $item = $this->team_model::find(LUM_get_decode_id($request->item_id));
-            $item->encode_id = LUM_GetEncodeId($item->id);
+            $item->encode_id = LUM_get_encode_id($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_team_form', compact('item'))->render();
             DB::commit();
             $res['success'] = true;
@@ -568,7 +568,7 @@ class RoleManagementController extends Controller
 
         return Datatables::eloquent($users)
             ->editColumn('id', function ($data) {
-                return LUM_GetEncodeId($data->id);
+                return LUM_get_encode_id($data->id);
             })
             ->addColumn('username', function ($data) {
                 $user = $this->user_model::find($data->user_id);

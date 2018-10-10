@@ -40,7 +40,7 @@ class LoginController extends Controller
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
@@ -58,7 +58,6 @@ class LoginController extends Controller
             try
             {
                 $username = strtolower($request->username);
-                $password = bcrypt($request->password) ;
                 if (Auth::attempt(['username' => $username, 'password' => $request->password]))
                 {
                     $result['success'] = true;
@@ -75,7 +74,7 @@ class LoginController extends Controller
                 if (auth()->check())
                 {
                     $result['href'] = config('laravel_user_management.url_after_login');
-                    LUM_CreateLogLogin($request,auth()->id());
+                    LUM_create_log_login($request,auth()->id());
                 }
                 else
                 {

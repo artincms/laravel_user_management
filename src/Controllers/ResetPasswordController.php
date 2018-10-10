@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -59,8 +59,8 @@ class ResetPasswordController extends Controller
                 $user = $this->user_model::where('email', $request->email)->first();
                 if ($user)
                 {
-                    $email_confirmation_code = LUM_generateEmailRandomKey();
-                    $expireDate = LUM_nextDate(config('laravel_user_management.expire_date'));
+                    $email_confirmation_code = LUM_generate_email_random_key();
+                    $expireDate = LUM_next_date(config('laravel_user_management.expire_date'));
                     $reset = new PasswordReset();
                     $reset->email = $user->email;
                     $reset->token = $email_confirmation_code;
@@ -143,7 +143,7 @@ class ResetPasswordController extends Controller
         ]);
         if ($validator->fails())
         {
-            $api_errors = validation_error_to_api_json($validator->errors());
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
                     'success' => false,
@@ -181,8 +181,8 @@ class ResetPasswordController extends Controller
                     }
                     else
                     {
-                        $email_confirmation_code = LUM_generateEmailRandomKey();
-                        $expireDate = LUM_nextDate(config('laravel_user_management.expire_date'));
+                        $email_confirmation_code = LUM_generate_email_random_key();
+                        $expireDate = LUM_next_date(config('laravel_user_management.expire_date'));
                         $reset->token = $email_confirmation_code;
                         $reset->expire_at = $expireDate;
                         $reset->save();

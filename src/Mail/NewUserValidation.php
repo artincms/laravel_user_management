@@ -20,7 +20,7 @@ class NewUserValidation extends Mailable
     public function build()
     {
         return $this->view('laravel_user_management::frontend.emails.new_user_validation')
-            ->from('sanat@freezones.ir')
+            ->from('sadeghi@test.artincms.ir')
             ->subject('تایید ایمیل کاربر')
             ->with('info', $this->info);
     }

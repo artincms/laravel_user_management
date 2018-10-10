@@ -1,8 +1,8 @@
 <?php
 
-if (!function_exists('LUM_GetEncodeId'))
+if (!function_exists('LUM_get_encode_id'))
 {
-    function LUM_GetEncodeId($id)
+    function LUM_get_encode_id($id)
     {
         if ($id < 0)
         {
@@ -17,9 +17,10 @@ if (!function_exists('LUM_GetEncodeId'))
 
     }
 }
-if (!function_exists('LUM_GetDecodeId'))
+
+if (!function_exists('LUM_get_decode_id'))
 {
-    function LUM_GetDecodeId($id, $route = false)
+    function LUM_get_decode_id($id, $route = false)
     {
         $my_routes = [
 
@@ -64,9 +65,10 @@ if (!function_exists('LUM_GetDecodeId'))
 
     }
 }
-if (!function_exists('LUM_Date_GtoJ'))
+
+if (!function_exists('LUM_date_g_to_j'))
 {
-    function LUM_Date_GtoJ($GDate = null, $Format = "Y/m/d-H:i", $convert = true)
+    function LUM_date_g_to_j($GDate = null, $Format = "Y/m/d-H:i", $convert = true)
     {
         if ($GDate == '-0001-11-30 00:00:00' || $GDate == null)
         {
@@ -80,9 +82,9 @@ if (!function_exists('LUM_Date_GtoJ'))
     }
 }
 
-if (!function_exists('LUM_Date_JtoG'))
+if (!function_exists('LUM_date_j_to_g'))
 {
-    function LUM_Date_JtoG($jDate, $delimiter = '/', $to_string = false, $with_time = false, $input_format = 'Y/m/d H:i:s')
+    function LUM_date_j_to_g($jDate, $delimiter = '/', $to_string = false, $with_time = false, $input_format = 'Y/m/d H:i:s')
     {
         $jDate = ConvertNumbersFatoEn($jDate);
         $parseDateTime = ArtinCMS\LUM\Helpers\Classes\jDateTime::parseFromFormat($input_format, $jDate);
@@ -102,9 +104,10 @@ if (!function_exists('LUM_Date_JtoG'))
         return ($r);
     }
 }
-if (!function_exists('LUM_BuildTree'))
+
+if (!function_exists('LUM_build_tree'))
 {
-    function LUM_BuildTree($flat_array, $pidKey, $parent = 0, $idKey = 'id', $children_key = 'children')
+    function LUM_build_tree($flat_array, $pidKey, $parent = 0, $idKey = 'id', $children_key = 'children')
     {
         if (empty($flat_array))
         {
@@ -134,9 +137,10 @@ if (!function_exists('LUM_BuildTree'))
         return $tree;
     }
 }
-if (!function_exists('LUM_AllPermissionChilds'))
+
+if (!function_exists('LUM_all_permission_childs'))
 {
-    function LUM_AllPermissionChilds($item_id)
+    function LUM_all_permission_childs($item_id)
     {
         $array_ids = [];
         $item = \ArtinCMS\LUM\Models\PermissionCategoryManagement::with('Children', 'childItems')->find($item_id);
@@ -173,9 +177,10 @@ if (!function_exists('LUM_AllPermissionChilds'))
         return $array_ids;
     }
 }
-if (!function_exists('generate_permissions_layout'))
+
+if (!function_exists('LUM_generate_permissions_layout'))
 {
-    function generate_permissions_layout($model, $current_level = 0, $data = [], $maximum_depth = false, $is_first_level = true)
+    function LUM_generate_permissions_layout($model, $current_level = 0, $data = [], $maximum_depth = false, $is_first_level = true)
     {
         $items = $model::with('Children', 'childItems')->where('parent_id', $current_level)->get();
         if ($is_first_level)
@@ -196,7 +201,7 @@ if (!function_exists('generate_permissions_layout'))
             if ($item->Children->count() > 0 && ($maximum_depth === false || $maximum_depth > 0))
             {
                 $result_html .= '<li class="nav-item card padding_10 margin_3" style="clear: both">';
-                $result_html .= '<div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_Create_checkbox_Class($item, 'show_div', false) . '" data-status="0" id="show_div_' . $item->id . '" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_Create_checkbox_Class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
+                $result_html .= '<div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_create_checkbox_class($item, 'show_div', false) . '" data-status="0" id="show_div_' . $item->id . '" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_create_checkbox_class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
                 if (count($item->childItems) > 0)
                 {
                     $result_html .= '<ul>';
@@ -212,19 +217,19 @@ if (!function_exists('generate_permissions_layout'))
                             $check = '';
                             $selected = '';
                         }
-                        $result_html .= '<li  style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . ' name="permission[]" class="' . LUM_Create_checkbox_Class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '" onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
+                        $result_html .= '<li  style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . ' name="permission[]" class="' . LUM_create_checkbox_class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '" onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
                     }
                     $result_html .= '</ul>';
                 }
 
-                $result_html .= generate_permissions_layout($model, $item->id, $data, $maximum_depth, false);
+                $result_html .= LUM_generate_permissions_layout($model, $item->id, $data, $maximum_depth, false);
                 $result_html .= '</li>';
             }
             else
             {
                 if ($is_first_level)
                 {
-                    $result_html .= '<li class="nav-item card padding_10 margin_3" style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_Create_checkbox_Class($item, 'show_div', false) . '" id="show_div_' . $item->id . '" data-status="0" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_Create_checkbox_Class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
+                    $result_html .= '<li class="nav-item card padding_10 margin_3" style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_create_checkbox_class($item, 'show_div', false) . '" id="show_div_' . $item->id . '" data-status="0" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_create_checkbox_class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
                     if (count($item->childItems) > 0)
                     {
                         $result_html .= '<ul>';
@@ -240,7 +245,7 @@ if (!function_exists('generate_permissions_layout'))
                                 $check = '';
                                 $selected = '';
                             }
-                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . '  name="permission[]" class="' . LUM_Create_checkbox_Class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '"  onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
+                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . '  name="permission[]" class="' . LUM_create_checkbox_class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '"  onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
                         }
                         $result_html .= '</ul>';
                     }
@@ -249,7 +254,7 @@ if (!function_exists('generate_permissions_layout'))
                 }
                 else
                 {
-                    $result_html .= '<li class="card padding_10 margin_3"  style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_Create_checkbox_Class($item, 'show_div', false) . '" id="show_div_' . $item->id . '" data-status="0" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_Create_checkbox_Class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
+                    $result_html .= '<li class="card padding_10 margin_3"  style="clear: both"><div class="card-header permission_header"><div class="show_permission_checkbox ' . LUM_create_checkbox_class($item, 'show_div', false) . '" id="show_div_' . $item->id . '" data-status="0" data-item_id="' . $item->id . '"><i class="far fa-circle ' . LUM_create_checkbox_class($item, 'font_check_i', false) . '" id="font_check_' . $item->id . '"></i></div><div class="card-title">' . $item->title . '</div></div>';
                     if (count($item->childItems) > 0)
                     {
                         $result_html .= '<ul>';
@@ -265,7 +270,7 @@ if (!function_exists('generate_permissions_layout'))
                                 $check = '';
                                 $selected = '';
                             }
-                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . '  name="permission[]" class="' . LUM_Create_checkbox_Class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '" onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
+                            $result_html .= '<li style="margin: 5px 10px 0px;float: right;cursor: pointer;"><div class="checkbox"><label><input ' . $check . '  name="permission[]" class="' . LUM_create_checkbox_class($childitem, 'pch') . ' checkbox ' . $selected . '" type="checkbox" value="" data-item_id="' . $childitem->id . '" onchange="change_checked(this)"><span>' . $childitem->display_name . '</span></label></div></li>';
                         }
                         $result_html .= '</ul>';
                     }
@@ -287,9 +292,9 @@ if (!function_exists('generate_permissions_layout'))
     }
 }
 
-if (!function_exists('LUM_AllParentsPermission'))
+if (!function_exists('LUM_all_parents_permission'))
 {
-    function LUM_AllParentsPermission($item, $is_item = true)
+    function LUM_all_parents_permission($item, $is_item = true)
     {
         if ($is_item)
         {
@@ -337,11 +342,11 @@ if (!function_exists('LUM_AllParentsPermission'))
     }
 }
 
-if (!function_exists('LUM_Create_checkbox_Class'))
+if (!function_exists('LUM_create_checkbox_class'))
 {
-    function LUM_Create_checkbox_Class($item, $pre_class, $is_item = true)
+    function LUM_create_checkbox_class($item, $pre_class, $is_item = true)
     {
-        $arra_ids = LUM_AllParentsPermission($item, $is_item);
+        $arra_ids = LUM_all_parents_permission($item, $is_item);
         $res = '';
         foreach ($arra_ids as $id)
         {
@@ -355,9 +360,9 @@ if (!function_exists('LUM_Create_checkbox_Class'))
     }
 }
 
-if (!function_exists('LUM_CreateLogLogin'))
+if (!function_exists('LUM_create_log_login'))
 {
-    function LUM_CreateLogLogin($request, $user_id)
+    function LUM_create_log_login($request, $user_id)
     {
         if ($request && $user_id)
         {
@@ -374,9 +379,9 @@ if (!function_exists('LUM_CreateLogLogin'))
     }
 }
 
-if (!function_exists('LUM_generateSMSRandomKey'))
+if (!function_exists('LUM_generate_sms_random_key'))
 {
-    function LUM_generateSMSRandomKey($digits)
+    function LUM_generate_sms_random_key($digits)
     {
         $min = pow(10, $digits - 1);
         $max = pow(10, $digits) - 1;
@@ -384,15 +389,16 @@ if (!function_exists('LUM_generateSMSRandomKey'))
         return mt_rand($min, $max);
     }
 }
-if (!function_exists('LUM_generateEmailRandomKey'))
+
+if (!function_exists('LUM_generate_email_random_key'))
 {
-    function LUM_generateEmailRandomKey()
+    function LUM_generate_email_random_key()
     {
         $random_key = md5(rand(1000, 50000).date('Y-m-d H:i:s'));
         $find = config('laravel_user_management.user_model') ::where('email_confirmation_code',$random_key)->first();
         if($find)
         {
-            LUM_generateEmailRandomKey() ;
+            LUM_generate_email_random_key() ;
         }
         else
         {
@@ -401,9 +407,10 @@ if (!function_exists('LUM_generateEmailRandomKey'))
         return $random_key;
     }
 }
-if (!function_exists('array_field_name'))
+
+if (!function_exists('LUM_array_field_name'))
 {
-    function array_field_name($key)
+    function LUM_array_field_name($key)
     {
         $key_name_parts = explode('.', $key);
         $res = $key_name_parts[0];
@@ -418,23 +425,25 @@ if (!function_exists('array_field_name'))
         return $res;
     }
 }
-if (!function_exists('validation_error_to_api_json'))
+
+if (!function_exists('LUM_validation_error_to_api_json'))
 {
-    function validation_error_to_api_json($errors)
+    function LUM_validation_error_to_api_json($errors)
     {
         $api_errors = [];
         foreach ($errors->getMessages() as $key => $value)
         {
-            $key = array_field_name($key);
+            $key = LUM_array_field_name($key);
             $api_errors[ $key ] = array_values($value);
         }
 
         return $api_errors;
     }
 }
-if (!function_exists('LUM_nextDate'))
+
+if (!function_exists('LUM_next_date'))
 {
-    function LUM_nextDate($key)
+    function LUM_next_date($key)
     {
         $date = date('Y-m-d H:i:s');
         $currentDate = strtotime($date);
@@ -444,13 +453,13 @@ if (!function_exists('LUM_nextDate'))
     }
 }
 
-//LUM_activationUrl return 3 url
+//LUM_activation_url return 3 url
 //1    successed  --->when activation successed
 //2    failed    --->when activation failed
 //3    expired   ----->when activation code expired
-if (!function_exists('LUM_activationUrl'))
+if (!function_exists('LUM_activation_url'))
 {
-    function LUM_activationUrl()
+    function LUM_activation_url()
     {
         $route['failed'] = route('LUM.Activation.failedActivation');
         $route['successed'] = route('LUM.Activation.successedActivation');

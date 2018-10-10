@@ -10,10 +10,10 @@
             presence: {message: '^<strong>وارد کردن ایمیل الزامی است.</strong>'},
             email: {message: '^<strong>ایمیل وارد شده معتبر نمی باشد.</strong>'}
         },
-        //
-        // rules: {
-        //     presence: {message: '^<strong>تایید قوانین الزامی است .</strong>'},
-        // },
+
+        rules: {
+            presence: {message: '^<strong>تایید قوانین الزامی است .</strong>'},
+        },
         password: {
             presence: {message: '^<strong>وارد کردن رمزعبور الزامی است.</strong>'},
             length: {minimum: 6, message: '^<strong>کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.</strong>'}
@@ -36,7 +36,7 @@
         var formData = new FormData(formElement);
         $.ajax({
             type: "POST",
-            url: '{{ route('LUM.register.addRegister')}}',
+            url: '{{ route('LUM.Register.addRegister')}}',
             dataType: "json",
             data: formData,
             processData: false,

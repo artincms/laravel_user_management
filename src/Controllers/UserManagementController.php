@@ -31,7 +31,7 @@ class UserManagementController extends Controller
 
         return Datatables::eloquent($users)
             ->editColumn('id', function ($data) {
-                return LUM_GetEncodeId($data->id);
+                return LUM_get_encode_id($data->id);
             })
             ->addColumn('main_id', function ($data) {
                 return $data->id;
@@ -48,7 +48,7 @@ class UserManagementController extends Controller
         try
         {
             $item = $this->user_model::find(LUM_get_decode_id($request->item_id));
-            $item->encode_id = LUM_GetEncodeId($item->id);
+            $item->encode_id = LUM_get_encode_id($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_user_form', compact('item'))->render();
             $res['success'] = true;
             $res['get_edit_item'] = $item_form;
