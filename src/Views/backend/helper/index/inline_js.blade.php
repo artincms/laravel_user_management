@@ -330,6 +330,7 @@
         var type = 1 ;
         set_permissions(item_id,type);
     });
+
     function set_permissions(item_id,type) {
         $('#show_form_permission_to_role').children().remove();
         $('#set_permissions').append(generate_loader_html('لطفا منتظر بمانید...'));
@@ -428,6 +429,7 @@
             $(this).attr('data-status', 0);
         }) ;
     }
+
     function change_checked(input) {
         var $this = $(input);
         $this.toggleClass('selected');

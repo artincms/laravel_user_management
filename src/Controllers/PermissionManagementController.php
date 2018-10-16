@@ -14,11 +14,13 @@ class PermissionManagementController extends Controller
 {
     protected $role_model = '';
     protected $permission_model = '';
+    protected $user_model = '';
 
     public function __construct(array $settings = [])
     {
         $this->role_model =config('laratrust.models.role');
         $this->permission_model =config('laratrust.models.permission');
+        $this->user_model = config('laravel_user_management.user_model');
     }
 
     private function deleteAllPermissinCategory($id)
@@ -490,7 +492,7 @@ class PermissionManagementController extends Controller
             }
             else if($type = 1)
             {
-                $user = UserManagement::find($item_id);
+                $user = $this->user_model::find($item_id);
                 $user->permissions()->sync($request->items);
                 $res =
                     [
@@ -522,7 +524,7 @@ class PermissionManagementController extends Controller
         $item_id = $request->item_id ;
         if($type == 1)
         {
-            $user = UserManagement::find(LUM_get_decode_id($item_id));
+            $user = $this->user_model::find(LUM_get_decode_id($item_id));
             if(isset( $user->permissions))
             {
                 $user_permissions = $user->permissions ;
