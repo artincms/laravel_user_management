@@ -7,7 +7,7 @@
             <span class="label_title">نام</span>
         </label>
         <div class="col-sm-6">
-            <input name="name" value="{{$item->name}}" class="form-control" id="role_name" tab="1">
+            <input name="name" value="{{$item->name}}" class="form-control" id="name" tab="1">
         </div>
         <div class="col-sm-4 messages"></div>
     </div>
