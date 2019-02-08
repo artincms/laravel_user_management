@@ -30,9 +30,8 @@ class User_Request extends FormRequest
                 // Person
                 'first_name'            => 'required|min:2|max:60',
                 'last_name'             => 'required|min:2|max:60',
-//                'mobile'                => 'required|mobile||unique:lum_users,mobile,NULL,id,deleted_at,NULL',
                 'email'                 => 'required|email||unique:'.config('laravel_user_management.user_table').',email,NULL,id,deleted_at,NULL',
-                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,NULL,id,deleted_at,NULL',
+                'username'              => 'required|alpha_num|min:5|max:20|unique:'.config('laravel_user_management.user_table').',username,NULL,id,deleted_at,NULL',
                 'password'              => 'required|confirmed|min:6',
                 'password_confirmation' => 'required|min:6',
             ];

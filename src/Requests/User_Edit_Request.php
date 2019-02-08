@@ -28,14 +28,13 @@ class User_Edit_Request extends FormRequest
         $roles =
             [
                 // Person
-                'first_name'            => 'required|min:2|max:60',
-                'last_name'             => 'required|min:2|max:60',
-//                'mobile'                => 'required|mobile||unique:lum_users,mobile,'.LUM_get_decode_id($this->request->get('item_id')).',id,deleted_at,NULL',
-                'email'                 => 'required|email||unique:lum_users,email,'.LUM_get_decode_id($this->request->get('item_id')).',id,deleted_at,NULL',
-                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,'.LUM_get_decode_id($this->request->get('item_id')).',id,deleted_at,NULL',
+                'first_name' => 'required|min:2|max:60',
+                'last_name'  => 'required|min:2|max:60',
+                'email'      => 'required|email||unique:' . config('laravel_user_management.user_table') . ',email,' . LUM_get_decode_id($this->request->get('item_id')) . ',id,deleted_at,NULL',
+                'username'   => 'required|alpha_num|min:5|max:20|unique:' . config('laravel_user_management.user_table') . ',username,' . LUM_get_decode_id($this->request->get('item_id')) . ',id,deleted_at,NULL',
 
             ];
-        if($this->request->get('password')  || $this->request->get('confirm_password'))
+        if ($this->request->get('password') || $this->request->get('confirm_password'))
         {
             $role_pass =
                 [
@@ -45,10 +44,11 @@ class User_Edit_Request extends FormRequest
         }
         else
         {
-            $role_pass = [] ;
+            $role_pass = [];
         }
 
-        $roles = array_merge($roles,$role_pass) ;
+        $roles = array_merge($roles, $role_pass);
+
         return $roles;
     }
 
@@ -59,7 +59,7 @@ class User_Edit_Request extends FormRequest
         {
             $res =
                 [
-                    'success'      => false,
+                    'success'     => false,
                     'status_type' => "error",
                     'errors'      => ['کد'],
                     'message'     => [['title' => 'لطفا موارد زیر را بررسی نمایید:', 'items' => ['کد امنیتی صحیح نمی‌باشد.']]]
@@ -74,7 +74,7 @@ class User_Edit_Request extends FormRequest
         {
             $res =
                 [
-                    'success'      => false,
+                    'success'     => false,
                     'status_type' => "error",
                     'errors'      => $api_errors,
                     'message'     => [['title' => 'لطفا موارد زیر را بررسی نمایید:', 'items' => $api_errors]]
@@ -92,25 +92,25 @@ class User_Edit_Request extends FormRequest
     {
         return [
             // Person
-            'first_name.required'                    => 'نام الزامی است',
-            'first_name.min'                         => 'نام باید حداقل 2 کاراکتر باشد.',
-            'first_name.max'                         => 'نام حداکثر می‌تواند 60 کاراکتر باشد.',
-            'last_name.required'                     => 'وارد کردن نام خانوادگی الزامی است.',
-            'last_name.min'                          =>'نام خانوادگی باید حداقل 2 کاراکتر باشد.',
-            'last_name.max'                          =>  'نام خانوادگی نمی‌تواند بیشتر از 60 کاراکتر باشد.',
-            'mobile.iran_mobile_phone'               => 'شماره همراه وارد شده صحیح نمی باشد.',
-            'email.required'                         =>  'وارد کردن ایمیل الزامی است.',
-            'email.email'                            =>  'ایمیل وارد شده معتبر نمی باشد.',
-            'email.unique'                           => 'ایمیل وارد شده قبلا در سامانه ثبت شده است.',
-            'username.required'                      =>  'وارد کردن نام کاربری الزامی است.',
-            'username.min'                           => 'نام کاربری نمی‌تواند کمتر از 5 کاراکتر باشد.',
-            'username.max'                           => 'نام کاربری نمی‌تواند بیشتر از 20 کاراکتر باشد.',
-            'username.unique'                        =>'نام کاربری وارد شده قبلا در سامانه ثبت شده است.',
-            'password.required'                      => 'وارد کردن رمزعبور الزامی است.',
-            'password.confirmed'                     => 'تکرار رمز عبور با رمز عبور وارد شده یکسان نیست.',
-            'password.min'                           => 'کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
-            'password_confirmation.required'         =>'وارد کردن تکرار کلمه عبور الزامی است.',
-            'password_confirmation.min'              => 'تکرار کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
+            'first_name.required'            => 'نام الزامی است',
+            'first_name.min'                 => 'نام باید حداقل 2 کاراکتر باشد.',
+            'first_name.max'                 => 'نام حداکثر می‌تواند 60 کاراکتر باشد.',
+            'last_name.required'             => 'وارد کردن نام خانوادگی الزامی است.',
+            'last_name.min'                  => 'نام خانوادگی باید حداقل 2 کاراکتر باشد.',
+            'last_name.max'                  => 'نام خانوادگی نمی‌تواند بیشتر از 60 کاراکتر باشد.',
+            'mobile.iran_mobile_phone'       => 'شماره همراه وارد شده صحیح نمی باشد.',
+            'email.required'                 => 'وارد کردن ایمیل الزامی است.',
+            'email.email'                    => 'ایمیل وارد شده معتبر نمی باشد.',
+            'email.unique'                   => 'ایمیل وارد شده قبلا در سامانه ثبت شده است.',
+            'username.required'              => 'وارد کردن نام کاربری الزامی است.',
+            'username.min'                   => 'نام کاربری نمی‌تواند کمتر از 5 کاراکتر باشد.',
+            'username.max'                   => 'نام کاربری نمی‌تواند بیشتر از 20 کاراکتر باشد.',
+            'username.unique'                => 'نام کاربری وارد شده قبلا در سامانه ثبت شده است.',
+            'password.required'              => 'وارد کردن رمزعبور الزامی است.',
+            'password.confirmed'             => 'تکرار رمز عبور با رمز عبور وارد شده یکسان نیست.',
+            'password.min'                   => 'کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
+            'password_confirmation.required' => 'وارد کردن تکرار کلمه عبور الزامی است.',
+            'password_confirmation.min'      => 'تکرار کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
         ];
     }
 }
