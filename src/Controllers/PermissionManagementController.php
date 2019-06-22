@@ -14,11 +14,13 @@ class PermissionManagementController extends Controller
 {
     protected $role_model = '';
     protected $permission_model = '';
+    protected $user_model = '';
 
     public function __construct(array $settings = [])
     {
         $this->role_model =config('laratrust.models.role');
         $this->permission_model =config('laratrust.models.permission');
+        $this->user_model = config('laravel_user_management.user_model');
     }
 
     private function deleteAllPermissinCategory($id)
@@ -44,7 +46,7 @@ class PermissionManagementController extends Controller
 
         return Datatables::eloquent($permissions)
             ->editColumn('id', function ($data) {
-                return LUM_GetEncodeId($data->id);
+                return LUM_get_encode_id($data->id);
             })
             ->addColumn('created_at', function ($data) {
                 return LUM_date_g_to_j($data->created_at);
@@ -133,7 +135,7 @@ class PermissionManagementController extends Controller
     {
 
             $item = PermissionCategoryManagement::with('parent')->find(LUM_get_decode_id($request->item_id));
-            $item->encode_id = LUM_GetEncodeId($item->id);
+            $item->encode_id = LUM_get_encode_id($item->id);
             $item_form = view('laravel_user_management::backend.view.edit_permission_category_form', compact('item'))->render();
             $res['success'] = true;
             $res['get_edit_item'] = $item_form;
@@ -242,7 +244,7 @@ class PermissionManagementController extends Controller
 
         return Datatables::eloquent($permissions)
             ->editColumn('id', function ($data) {
-                return LUM_GetEncodeId($data->id);
+                return LUM_get_encode_id($data->id);
             })
             ->addColumn('created_at', function ($data) {
                 return LUM_date_g_to_j($data->created_at);
@@ -354,8 +356,8 @@ class PermissionManagementController extends Controller
         try
         {
             $item = $this->permission_model::find(LUM_get_decode_id($request->item_id));
-            $item->encode_id = LUM_GetEncodeId($item->id);
-            $item->category_encode_id = LUM_GetEncodeId($item->category_id);
+            $item->encode_id = LUM_get_encode_id($item->id);
+            $item->category_encode_id = LUM_get_encode_id($item->category_id);
             $item_form = view('laravel_user_management::backend.view.edit_permission_form', compact('item'))->render();
             DB::commit();
             $res['success'] = true;
@@ -490,7 +492,7 @@ class PermissionManagementController extends Controller
             }
             else if($type = 1)
             {
-                $user = UserManagement::find($item_id);
+                $user = $this->user_model::find($item_id);
                 $user->permissions()->sync($request->items);
                 $res =
                     [
@@ -522,7 +524,7 @@ class PermissionManagementController extends Controller
         $item_id = $request->item_id ;
         if($type == 1)
         {
-            $user = UserManagement::find(LUM_get_decode_id($item_id));
+            $user = $this->user_model::find(LUM_get_decode_id($item_id));
             if(isset( $user->permissions))
             {
                 $user_permissions = $user->permissions ;
@@ -554,7 +556,7 @@ class PermissionManagementController extends Controller
                 $permission_ids = [] ;
             }
         }
-        $permissions = generate_permissions_layout('ArtinCMS\LUM\Models\PermissionCategoryManagement',0,$permission_ids);
+        $permissions = LUM_generate_permissions_layout('ArtinCMS\LUM\Models\PermissionCategoryManagement',0,$permission_ids);
         $item_form = view('laravel_user_management::backend.view.permission_role', compact('permissions','type','item_id'))->render();
         $res['success'] = true;
         $res['get_permission_role'] = $item_form;

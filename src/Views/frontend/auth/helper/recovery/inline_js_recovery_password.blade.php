@@ -1,19 +1,6 @@
 <script>
-    var frm_register_users = document.querySelector("#frm_user_register");
-    var register_users_constraints = {
-        username: {
-            presence: {message: '^<strong>نام کاربری ضروری است.</strong>'},
-            checkUsername: {message: '^<strong>کدملی وارد شده معتبر نمی باشد.</strong>'},
-        },
-
-        email: {
-            presence: {message: '^<strong>وارد کردن ایمیل الزامی است.</strong>'},
-            email: {message: '^<strong>ایمیل وارد شده معتبر نمی باشد.</strong>'}
-        },
-
-        rules: {
-            presence: {message: '^<strong>تایید قوانین الزامی است .</strong>'},
-        },
+    var frm_recovery_password = document.querySelector("#frm_recovery_password");
+    var recovery_password_constraints = {
         password: {
             presence: {message: '^<strong>وارد کردن رمزعبور الزامی است.</strong>'},
             length: {minimum: 6, message: '^<strong>کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.</strong>'}
@@ -31,25 +18,32 @@
             }
         },
     };
-    init_validatejs(frm_register_users, register_users_constraints, ajax_func_register_users,"#frm_user_register",true);
-    function ajax_func_register_users(formElement) {
+    init_validatejs(frm_recovery_password,recovery_password_constraints, ajax_func_recovery_password,"#frm_recovery_password");
+    function ajax_func_recovery_password(formElement) {
         var formData = new FormData(formElement);
         $.ajax({
             type: "POST",
-            url: '{{ route('LUM.Register.addRegister')}}',
+            url: '{{ route('LUM.Recovery.storeRecoveryPassword')}}',
             dataType: "json",
             data: formData,
             processData: false,
             contentType: false,
             success: function (data) {
-                $('#frm_user_register .total_loader').remove();
+                $('#frm_recovery_password .total_loader').remove();
                 if (data.success) {
                     $('#form_message_box').addClass('hidden');
-                    $('.show_activation_message').removeClass('hidden').html('حساب کاربری شما ساخته شد . لطفا برای فعال سازی حساب کاربری از طریق ایمیل اقدام نمایید .');
+                    $('.show_success_message').removeClass('hidden').html(data.message);
+                    document.location = data.href
                 }
                 else {
-                    $('.show_activation_message').addClass('hidden');
+                    $('.show_success_message').addClass('hidden');
                     showErrors(formElement, data.errors);
+                    var html='<div class="alert alert-danger"><ul>'
+                    $.each(data.errors.error, function( k, v ) {
+                        html += '<li>'+v+'</li>'  ;
+                    });
+                    html += '</ul></div>' ;
+                    $('#form_message_box').html(html);
                 }
             }
         });

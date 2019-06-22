@@ -92,6 +92,10 @@ class LUMServiceProvider extends ServiceProvider
             __DIR__ . '/Config/laratrust.php' => config_path('laratrust.php'),
         ]);
 
+        $this->publishes([
+            __DIR__ . '/Middlewares/RedirectIfNotConfirmed.php' => app_path('Http/Middleware/RedirectIfNotConfirmed.php'),
+        ]);
+
         if (config('laravel_user_management.have_external_controller'))
         {
             $this->publishes([

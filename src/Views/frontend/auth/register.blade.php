@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" class="styled" name="rules">
+                            <input type="checkbox" class="styled" value="1" name="rules">
                             قبول <a href="{{$term_url}}">قوانین </a>سایت
                         </label>
                         <span class="help-block text-danger messages"></span>

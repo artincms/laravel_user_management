@@ -330,6 +330,7 @@
         var type = 1 ;
         set_permissions(item_id,type);
     });
+
     function set_permissions(item_id,type) {
         $('#show_form_permission_to_role').children().remove();
         $('#set_permissions').append(generate_loader_html('لطفا منتظر بمانید...'));
@@ -428,6 +429,7 @@
             $(this).attr('data-status', 0);
         }) ;
     }
+
     function change_checked(input) {
         var $this = $(input);
         $this.toggleClass('selected');
@@ -460,7 +462,6 @@
                 return selected = false ;
             }
         });
-        console.log(selected);
         if(!selected)
         {
         //     $('.show_permission_checkbox').each(function () {
@@ -529,6 +530,10 @@
             length: {minimum: 2, message: '^<strong>نام خانوادگی  نمی‌تواند کمتر از 2 کاراکتر باشد.</strong>'},
             length: {maximum: 60, message: '^<strong>نام خانوادگی نمی‌تواند بیشتر از 60 کاراکتر باشد.</strong>'}
         },
+        melli_code: {
+            length: {maximum: 10, message: '^<strong>کد ملی نمی‌تواند بیشتر از 10 کاراکتر باشد.</strong>'},
+            codeMelli: {message: '^<strong>کدملی وارد شده معتبر نمی باشد.</strong>'},
+        },
         email: {
             presence: {message: '^<strong>وارد کردن ایمیل الزامی است.</strong>'},
             email: {message: '^<strong>ایمیل وارد شده معتبر نمی باشد.</strong>'}
@@ -568,8 +573,9 @@
             success: function (data) {
                 $('#frm_create_users .total_loader').remove();
                 if (data.success) {
-                    $('.edit_user_tab').addClass('hidden');
-                    $('#edit_user').html('');
+                    // $('.edit_user_tab').addClass('hidden');
+                    // $('#edit_user').html('#frm_create_users');
+                    clear_form_elements('#frm_create_users');
                     menotify('success', data.title, data.message);
                     UsersGridData.ajax.reload(null, false);
                     $('a[href="#manage_user"]').click();

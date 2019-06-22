@@ -2,7 +2,7 @@
 
 if (!function_exists('LUM_get_encode_id'))
 {
-    function LUM_GetEncodeId($id)
+    function LUM_get_encode_id($id)
     {
         if ($id < 0)
         {
@@ -14,8 +14,10 @@ if (!function_exists('LUM_get_encode_id'))
 
             return $hashids->encode($id);
         }
+
     }
 }
+
 if (!function_exists('LUM_get_decode_id'))
 {
     function LUM_get_decode_id($id, $route = false)
@@ -63,6 +65,7 @@ if (!function_exists('LUM_get_decode_id'))
 
     }
 }
+
 if (!function_exists('LUM_date_g_to_j'))
 {
     function LUM_date_g_to_j($GDate = null, $Format = "Y/m/d-H:i", $convert = true)
@@ -78,6 +81,7 @@ if (!function_exists('LUM_date_g_to_j'))
 
     }
 }
+
 if (!function_exists('LUM_date_j_to_g'))
 {
     function LUM_date_j_to_g($jDate, $delimiter = '/', $to_string = false, $with_time = false, $input_format = 'Y/m/d H:i:s')
@@ -100,6 +104,7 @@ if (!function_exists('LUM_date_j_to_g'))
         return ($r);
     }
 }
+
 if (!function_exists('LUM_build_tree'))
 {
     function LUM_build_tree($flat_array, $pidKey, $parent = 0, $idKey = 'id', $children_key = 'children')
@@ -132,9 +137,10 @@ if (!function_exists('LUM_build_tree'))
         return $tree;
     }
 }
-if (!function_exists('LUM_all_permission_children'))
+
+if (!function_exists('LUM_all_permission_childs'))
 {
-    function LUM_all_permission_children($item_id)
+    function LUM_all_permission_childs($item_id)
     {
         $array_ids = [];
         $item = \ArtinCMS\LUM\Models\PermissionCategoryManagement::with('Children', 'childItems')->find($item_id);
@@ -171,9 +177,10 @@ if (!function_exists('LUM_all_permission_children'))
         return $array_ids;
     }
 }
+
 if (!function_exists('LUM_generate_permissions_layout'))
 {
-    function generate_permissions_layout($model, $current_level = 0, $data = [], $maximum_depth = false, $is_first_level = true)
+    function LUM_generate_permissions_layout($model, $current_level = 0, $data = [], $maximum_depth = false, $is_first_level = true)
     {
         $items = $model::with('Children', 'childItems')->where('parent_id', $current_level)->get();
         if ($is_first_level)
@@ -215,7 +222,7 @@ if (!function_exists('LUM_generate_permissions_layout'))
                     $result_html .= '</ul>';
                 }
 
-                $result_html .= generate_permissions_layout($model, $item->id, $data, $maximum_depth, false);
+                $result_html .= LUM_generate_permissions_layout($model, $item->id, $data, $maximum_depth, false);
                 $result_html .= '</li>';
             }
             else
@@ -284,6 +291,7 @@ if (!function_exists('LUM_generate_permissions_layout'))
         return $result_html;
     }
 }
+
 if (!function_exists('LUM_all_parents_permission'))
 {
     function LUM_all_parents_permission($item, $is_item = true)
@@ -333,6 +341,7 @@ if (!function_exists('LUM_all_parents_permission'))
         return $parrents;
     }
 }
+
 if (!function_exists('LUM_create_checkbox_class'))
 {
     function LUM_create_checkbox_class($item, $pre_class, $is_item = true)
@@ -350,6 +359,7 @@ if (!function_exists('LUM_create_checkbox_class'))
         return $res;
     }
 }
+
 if (!function_exists('LUM_create_log_login'))
 {
     function LUM_create_log_login($request, $user_id)
@@ -361,13 +371,14 @@ if (!function_exists('LUM_create_log_login'))
             $permissions = $user->permissions->toArray();
             $access = array_merge($roles, $permissions);
             $log = new \ArtinCMS\LUM\Models\LogManagement();
-            $log->ip = $request->ip;
+            $log->ip = $request->ip();
             $log->user_id = $user_id;
             $log->access_json = json_encode($access);
             $log->save();
         }
     }
 }
+
 if (!function_exists('LUM_generate_sms_random_key'))
 {
     function LUM_generate_sms_random_key($digits)
@@ -378,6 +389,7 @@ if (!function_exists('LUM_generate_sms_random_key'))
         return mt_rand($min, $max);
     }
 }
+
 if (!function_exists('LUM_generate_email_random_key'))
 {
     function LUM_generate_email_random_key()
@@ -395,6 +407,7 @@ if (!function_exists('LUM_generate_email_random_key'))
         return $random_key;
     }
 }
+
 if (!function_exists('LUM_array_field_name'))
 {
     function LUM_array_field_name($key)
@@ -412,6 +425,7 @@ if (!function_exists('LUM_array_field_name'))
         return $res;
     }
 }
+
 if (!function_exists('LUM_validation_error_to_api_json'))
 {
     function LUM_validation_error_to_api_json($errors)
@@ -426,6 +440,7 @@ if (!function_exists('LUM_validation_error_to_api_json'))
         return $api_errors;
     }
 }
+
 if (!function_exists('LUM_next_date'))
 {
     function LUM_next_date($key)
@@ -437,10 +452,11 @@ if (!function_exists('LUM_next_date'))
         return $formatDate ;
     }
 }
+
 //LUM_activation_url return 3 url
 //1    successed  --->when activation successed
-//2    failed     --->when activation failed
-//3    expired    --->when activation code expired
+//2    failed    --->when activation failed
+//3    expired   ----->when activation code expired
 if (!function_exists('LUM_activation_url'))
 {
     function LUM_activation_url()
@@ -451,3 +467,4 @@ if (!function_exists('LUM_activation_url'))
         return $route ;
     }
 }
+?>

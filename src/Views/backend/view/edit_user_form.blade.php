@@ -38,7 +38,7 @@
                 <span class="label_title">نام</span>
             </label>
             <div class="col-sm-6">
-                <input name="first_name" value="{{$item->first_name}}" class="form-control" id="role_name" tab="1">
+                <input name="first_name" value="{{$item->first_name}}" class="form-control" id="first_name" tab="1">
             </div>
             <div class="col-sm-4 messages"></div>
         </div>

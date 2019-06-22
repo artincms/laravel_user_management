@@ -5,6 +5,7 @@ namespace ArtinCMS\LUM\Controllers;
 //namespace App\Http\Controllers\Vendor\LUM;
 
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class LoginController extends Controller
         return view('laravel_user_management::frontend.auth.login', compact('term_url'));
     }
 
-    public function addLogin(Request $request)
+    public function userLogin(Request $request)
     {
         $rules = [
             'username'              => 'required',
@@ -39,6 +40,7 @@ class LoginController extends Controller
         ]);
         if ($validator->fails())
         {
+            $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $api_errors = LUM_validation_error_to_api_json($validator->errors());
             $res =
                 [
@@ -55,47 +57,33 @@ class LoginController extends Controller
             DB::beginTransaction();
             try
             {
-                $email_confirmation_code = LUM_generate_email_random_key();
-                $expireDate = LUM_next_date(config('laravel_user_management.expire_date'));
-                $username = $request->username;
-                $email = $request->email;
-                if ($username)
+                $username = strtolower($request->username);
+                if (Auth::attempt(['username' => $username, 'password' => $request->password]))
                 {
-                    $username = str_replace(' ', '', $username);
-                    $username = strtolower($username);
+                    $result['success'] = true;
                 }
-                if ($email)
+                elseif (Auth::attempt(['email' => $username, 'password' => $request->password]))
                 {
-                    $email = str_replace(' ', '', $email);
-                    $email = strtolower($email);
+                    $result['success'] = true;
                 }
-                $user = new $this->user_model();
-                $user->username = $username;
-                $user->password = bcrypt($request->password);
-                $user->email = $request->email;
-                $user->email_confirmation_code = $email_confirmation_code;
-                $user->email_confirmation_code_expire_at = $expireDate;
-                $user->save();
-                $res =
-                    [
-                        'success' => true,
-                        'title'   => "اضافه کردن کاربر",
-                        'message' => 'کاربر با موفقیت اضافه شد .'
-                    ];
-
-                if (config('laravel_user_management.the_email_must_be_checked'))
+                else
                 {
-                    $info =
-                        [
-                            'confirmation_code' => $email_confirmation_code,
-                            'email'             => $user->email
-                        ];
-                    Mail::to($user->email)->queue(new NewUserValidation($info));
+                    $result['success'] = false;
+                    $result['errors']['username'] = ['نام کاربری یا کلمه عبور اشتباه است.'];
+                }
+                if (auth()->check())
+                {
+                    $result['href'] = config('laravel_user_management.url_after_login');
+                    LUM_create_log_login($request,auth()->id());
+                }
+                else
+                {
+                    $result['href'] = '#';
                 }
 
                 DB::commit();
 
-                return $res;
+                return json_encode($result);
             } catch (\Exception $e)
             {
                 DB::rollback();

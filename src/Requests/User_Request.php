@@ -30,13 +30,22 @@ class User_Request extends FormRequest
                 // Person
                 'first_name'            => 'required|min:2|max:60',
                 'last_name'             => 'required|min:2|max:60',
-//                'mobile'                => 'required|mobile||unique:lum_users,mobile,NULL,id,deleted_at,NULL',
-                'email'                 => 'required|email||unique:lum_users,email,NULL,id,deleted_at,NULL',
-                'username'              => 'required|alpha_num|min:5|max:20|unique:lum_users,username,NULL,id,deleted_at,NULL',
+                'email'                 => 'required|email||unique:'.config('laravel_user_management.user_table').',email,NULL,id,deleted_at,NULL',
+                'username'              => 'required|alpha_num|min:5|max:20|unique:'.config('laravel_user_management.user_table').',username,NULL,id,deleted_at,NULL',
                 'password'              => 'required|confirmed|min:6',
                 'password_confirmation' => 'required|min:6',
             ];
-
+        if ($this->request->get('melli_code'))
+        {
+            $codemeli = [
+                'melli_code' => 'required|melli_code|unique:'.config('laravel_user_management.user_table').',melli_code,NULL,id,deleted_at,NULL',
+            ];
+        }
+        else
+        {
+            $codemeli = [];
+        }
+        $roles = array_merge($roles,$codemeli);
         return $roles;
     }
 
@@ -99,6 +108,7 @@ class User_Request extends FormRequest
             'password.min'                           => 'کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
             'password_confirmation.required'         =>'وارد کردن تکرار کلمه عبور الزامی است.',
             'password_confirmation.min'              => 'تکرار کلمه عبور نمی‌تواند کمتر از 6 کاراکتر باشد.',
+            'melli_code.unique'                           => 'کد ملی وارد شده قبلا در سامانه ثبت شده است.',
         ];
     }
 }

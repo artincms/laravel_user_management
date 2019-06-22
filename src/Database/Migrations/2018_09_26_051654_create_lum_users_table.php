@@ -22,6 +22,7 @@ class CreateLumUsersTable extends Migration
             $table->string('email');
             $table->string('password', 255);
             $table->string('mobile', 20)->nullable()->default(null);
+            $table->string('melli_code', 255)->nullable()->default(null);
             $table->text('address')->nullable()->default(null);
             $table->text('email_confirmation_code')->nullable()->default(null);
             $table->enum('email_confirmed', array('0','1'))->nullable()->default('0');
