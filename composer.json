@@ -19,9 +19,9 @@
 
     },
     "require": {
-        "yajra/laravel-datatables-oracle": "~9.0",
-        "santigarcor/laratrust": "5.2.*",
-        "hashids/hashids": "^3.0"
+        "yajra/laravel-datatables-oracle": ">=9.0",
+        "santigarcor/laratrust": ">=5.2.0",
+        "hashids/hashids": ">=3.0"
     },
     "extra": {
         "laravel": {
