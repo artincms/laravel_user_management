@@ -539,6 +539,8 @@ class RoleManagementController extends Controller
 
             $user = $this->user_model::find($item_id);
             $user->roles()->sync($request->items);
+            \Artisan::call('cache:clear');
+
             $res =
                 [
                     'success' => true,

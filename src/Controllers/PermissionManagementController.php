@@ -298,6 +298,7 @@ class PermissionManagementController extends Controller
                         'title'   => "ثبت دسترسی",
                         'message' => 'دسترسی با موفقیت ثبت شد.'
                     ];
+                \Artisan::call('cache:clear');
                 DB::commit();
 
                 return $res;
@@ -501,7 +502,7 @@ class PermissionManagementController extends Controller
                         'message' => 'دسترسی با موفقیت ثبت شد.'
                     ];
             }
-
+            \Artisan::call('cache:clear');
             DB::commit();
 
             return $res;
@@ -560,7 +561,7 @@ class PermissionManagementController extends Controller
         $item_form = view('laravel_user_management::backend.view.permission_role', compact('permissions','type','item_id'))->render();
         $res['success'] = true;
         $res['get_permission_role'] = $item_form;
-
+        \Artisan::call('cache:clear');
         return $res;
     }
 
